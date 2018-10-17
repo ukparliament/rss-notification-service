@@ -4,7 +4,7 @@
   "description": "A prototype for RSS notification emails",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/mocha test --recursive --no-timeouts"
   },
   "repository": {
     "type": "git",
@@ -17,9 +17,13 @@
   },
   "homepage": "https://github.com/ukparliament/rss-notification-service#readme",
   "dependencies": {
+    "aws-sdk": "^2.342.0",
     "axios": "^0.18.0",
+    "chai": "^4.2.0",
     "cheerio": "^1.0.0-rc.2",
+    "local-dynamo": "^0.5.0",
     "mailchimp-api-v3": "^1.12.0",
+    "mocha": "^5.2.0",
     "rss-parser": "^3.5.2"
   }
 }
