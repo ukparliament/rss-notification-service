@@ -1,13 +1,13 @@
 const ddblocal = require('local-dynamo'),
-      aws = require('../helpers/helper.js'),
-      mockItems = require('../fixtures/json/feeds.json');
+      aws = require('../helpers/dynamodb.js'),
+      mockItems = require('../fixtures/json/feeds.json'),
       expected = require('../fixtures/json/dynamodb.json'),
-      assert = require('chai').assert;
-
-let dynamoInstance;
-let db;
+      { assert } = require('chai');
 
 describe('DynamoDB', () => {
+
+  let dynamoInstance;
+  let db;
 
   const helper = {
     createTable() {
