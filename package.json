@@ -20,7 +20,6 @@
     "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.2",
     "mailchimp-api-v3": "^1.12.0",
-    "moment": "^2.22.2",
     "rss-parser": "^3.5.2"
   }
 }
