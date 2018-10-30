@@ -1,4 +1,4 @@
-FROM 12-jdk-alpine
+FROM openjdk:12-jdk-alpine
 
 ARG MC_API_KEY
 ARG AWS_DYNAMODB_ENDPOINT
