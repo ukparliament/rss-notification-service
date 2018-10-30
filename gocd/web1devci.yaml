@@ -1,0 +1,55 @@
+pipelines:
+  parliament.uk-rss-notification-service:
+    group: main
+    label_template: "${COUNT}"
+    environment_variables:
+      RACK_ENV: development
+      PARLIAMENT_API_VERSION: Staging
+    materials:
+      parliament.uk-rss-notification-service-git:
+        git: https://github.com/ukparliament/rss-notification-service.git
+        branch: master
+        auto_update: true
+    stages:
+      - build:
+          jobs:
+            build:
+              tasks:
+                - exec:
+                    run_if: passed
+                    command: make
+                    arguments:
+                      - test
+                - exec:
+                    run_if: passed
+                    command: make
+                    arguments:
+                      - build
+                - exec:
+                    run_if: passed
+                    command: make
+                    arguments:
+                      - push
+                - exec:
+                    run_if: any
+                    command: make
+                    arguments:
+                      - rmi
+      - deploy:
+          jobs:
+            build:
+              tasks:
+                - exec:
+                    run_if: passed
+                    command: make
+                    arguments:
+                      - deploy-ecs
+
+
+
+
+
+environments:
+  Web.DEVCI:
+    pipelines:
+      - parliament.uk-rss-notification-service
