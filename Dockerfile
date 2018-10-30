@@ -18,7 +18,7 @@ ENV AWS_SES_ENDPOINT $AWS_SES_ENDPOINT
 ENV AWS_SES_REGION $AWS_SES_REGION
 ENV AWS_SES_FROM_EMAIL $AWS_SES_FROM_EMAIL
 
-RUN apk update && apk add nodejs
+RUN apk update && apk add nodejs nodejs-npm
 
 RUN npm install
 RUN npm test
