@@ -54,10 +54,7 @@ checkout_to_release:
 	git checkout -b release $(REL_TAG)
 
 build: # Using the variables defined above, run `docker build`, tagging the image and passing in the required arguments.
-	docker build -t $(IMAGE):$(VERSION) -t $(IMAGE):latest 
-
-run: # Run the Docker image we have created, mapping the HOST_PORT and CONTAINER_PORT
-	docker run --rm -p $(HOST_PORT):$(CONTAINER_PORT) $(IMAGE) \
+	docker build -t $(IMAGE):$(VERSION) -t $(IMAGE):latest \
 	--build-arg MC_API_KEY=$(MC_API_KEY) \
 	--build-arg AWS_DYNAMODB_ENDPOINT=$(AWS_DYNAMODB_ENDPOINT) \
 	--build-arg AWS_DYNAMODB_REGION=$(AWS_DYNAMODB_REGION) \
@@ -66,6 +63,9 @@ run: # Run the Docker image we have created, mapping the HOST_PORT and CONTAINER
 	--build-arg AWS_SES_FROM_EMAIL=$(AWS_SES_FROM_EMAIL) \
 	.
 
+
+run: # Run the Docker image we have created, mapping the HOST_PORT and CONTAINER_PORT
+	docker run --rm -p $(HOST_PORT):$(CONTAINER_PORT) $(IMAGE) 
 
 push: # Push the Docker images we have build to the configured Docker repository (Run in GoCD to push the image to AWS)
 	docker push $(IMAGE):$(VERSION)
