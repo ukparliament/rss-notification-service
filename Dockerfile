@@ -24,3 +24,6 @@ RUN npm install
 RUN npm test
 
 CMD [ "npm", "start" ]
+
+EXPOSE 8000
+EXPOSE 8001
