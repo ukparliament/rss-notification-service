@@ -19,11 +19,6 @@ pipelines:
                     run_if: passed
                     command: make
                     arguments:
-                      - test
-                - exec:
-                    run_if: passed
-                    command: make
-                    arguments:
                       - build
                 - exec:
                     run_if: passed
