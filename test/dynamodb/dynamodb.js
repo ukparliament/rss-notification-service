@@ -69,12 +69,16 @@ describe('DynamoDB', () => {
   };
 
   before(() => {
-    dynamoInstance = ddblocal.launch(null, 8000);
+    if(process.env.NODE_ENV !== 'test') {
+      dynamoInstance = ddblocal.launch(null, 8000);
+    }
     db = aws;
   });
 
   after(() => {
-    dynamoInstance.kill();
+    if(process.env.NODE_ENV !== 'test') {
+      dynamoInstance.kill();
+    }
     db = null;
   });
 

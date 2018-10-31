@@ -1,0 +1,12 @@
+version: '2'
+services:
+    node:
+        image: node:10.12.0-alpine
+        volumes:
+            - .:/rss-notification-service
+        working_dir: /rss-notification-service
+    dynamodb:
+        image: tray/dynamodb-local
+        ports:
+            - 8000:8000
+        entrypoint: -inMemory -port 8000

@@ -1,4 +1,4 @@
-FROM openjdk:12-jdk-alpine
+FROM node:10.12.0-alpine
 
 ARG MC_API_KEY
 ARG AWS_DYNAMODB_ENDPOINT
@@ -6,6 +6,7 @@ ARG AWS_DYNAMODB_REGION
 ARG AWS_SES_ENDPOINT
 ARG AWS_SES_REGION
 ARG AWS_SES_FROM_EMAIL
+ARG NODE_ENV=production
 
 WORKDIR /rss-notification-service
 
@@ -18,12 +19,6 @@ ENV AWS_SES_ENDPOINT $AWS_SES_ENDPOINT
 ENV AWS_SES_REGION $AWS_SES_REGION
 ENV AWS_SES_FROM_EMAIL $AWS_SES_FROM_EMAIL
 
-RUN apk update && apk add nodejs nodejs-npm
-
-RUN npm install
-RUN npm test
+RUN echo "Environment: (NODE_ENV): $NODE_ENV" && npm install
 
 CMD [ "npm", "start" ]
-
-EXPOSE 8000
-EXPOSE 8001

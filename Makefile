@@ -20,7 +20,6 @@ AWS_ACCOUNT_ID ?= $(or $(shell aws sts get-caller-identity --output text --query
 # A counter that represents the build number within GoCD. Used to tag and version our images.
 GO_PIPELINE_COUNTER ?= unknown
 
-
 # VERSION is used to tag the Docker images
 VERSION = 0.0.$(GO_PIPELINE_COUNTER)
 
@@ -28,7 +27,6 @@ VERSION = 0.0.$(GO_PIPELINE_COUNTER)
 # Cluster: list all clusters to update, separated by semicolons
 ECS_CLUSTER = ecs-apps
 AWS_REGION = eu-west-1
-
 
 # The name of our Docker image
 IMAGE = $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(APP_NAME)
@@ -63,9 +61,8 @@ build: # Using the variables defined above, run `docker build`, tagging the imag
 	--build-arg AWS_SES_FROM_EMAIL=$(AWS_SES_FROM_EMAIL) \
 	.
 
-
 run: # Run the Docker image we have created, mapping the HOST_PORT and CONTAINER_PORT
-	docker run --rm -p $(HOST_PORT):$(CONTAINER_PORT) $(IMAGE) 
+	docker run --rm -p $(HOST_PORT):$(CONTAINER_PORT) $(IMAGE)
 
 push: # Push the Docker images we have build to the configured Docker repository (Run in GoCD to push the image to AWS)
 	docker push $(IMAGE):$(VERSION)
@@ -79,4 +76,3 @@ rmi: # Remove local versions of our images.
 deploy-ecs: # Deploy our new Docker image onto an AWS cluster (Run in GoCD to deploy to various environments).
 	./aws_ecs/register-task-definition.sh $(APP_NAME)
 	./aws_ecs/update-services.sh "$(ECS_CLUSTER)" "$(APP_NAME)" "$(AWS_REGION)"
-
