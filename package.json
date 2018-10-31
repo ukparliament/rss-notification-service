@@ -11,13 +11,13 @@
     "url": "git+https://github.com/ukparliament/rss-notification-service.git"
   },
   "author": "Jake Mulley",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ukparliament/rss-notification-service/issues"
   },
   "homepage": "https://github.com/ukparliament/rss-notification-service#readme",
   "dependencies": {
-    "aws-sdk": "^2.342.0",
+    "aws-sdk": "^2.344.0",
     "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.2",
     "mailchimp-api-v3": "^1.12.0",
@@ -28,6 +28,7 @@
     "coveralls": "^3.0.2",
     "local-dynamo": "^0.5.0",
     "mocha": "^5.2.0",
-    "nyc": "^13.1.0"
+    "nyc": "^13.1.0",
+    "sinon": "^7.1.0"
   }
 }
