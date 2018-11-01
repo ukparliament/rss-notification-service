@@ -1,0 +1,15 @@
+version: '2'
+services:
+  test:
+    extends:
+      file: ./docker-compose.yml
+      service: node
+    environment:
+      - AWS_DYNAMODB_ENDPOINT=http://dynamodbtest:8000
+      - NODE_ENV=test
+    depends_on:
+      - dynamodbtest
+    ports:
+      - 3001:3001
+  dynamodbtest:
+    image: tray/dynamodb-local
