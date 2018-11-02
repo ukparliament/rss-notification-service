@@ -9,44 +9,44 @@ const dynamodb = {
    * @return {Promise}
    */
   deleteTable() {
-    return aws.deleteTable(params).promise();
+    const assigned = Object.assign({}, params);
+    return aws.deleteTable(params).promise().then(() => aws.waitFor('tableNotExists', assigned));
   },
   /**
    * Creates and provisions the DynamoDB table with key schema
    * @return {Promise}
    */
   setup() {
-    params.KeySchema = [
+    const assigned = Object.assign({}, params);
+    assigned.KeySchema = [
       {
         AttributeName: 'topic_id',
         KeyType: 'HASH'
       }
     ];
-    params.AttributeDefinitions = [
+    assigned.AttributeDefinitions = [
       {
         AttributeName: 'topic_id',
         AttributeType: 'S'
       }
     ],
-    params.StreamSpecification = {
+    assigned.StreamSpecification = {
       StreamEnabled: false
     },
-    params.ProvisionedThroughput = {
+    assigned.ProvisionedThroughput = {
       ReadCapacityUnits: 1,
       WriteCapacityUnits: 1
     }
 
-    return aws.createTable(params).promise();
+    return aws.createTable(assigned).promise().then(() => aws.waitFor('tableExists', assigned));
   },
   /**
-   * @param  {array} feeds An array of feeds to populate the DynamoDB table with
-   * @return {Promise}
+   * Cleans up and formats array for DynamoDB population
+   * @param  {array} feeds Array of feeds from the source ingesters
+   * @return {array}       Array of feeds in the correct format for DynamoDB
    */
-  populate(feeds) {
-    const params = { RequestItems: { topics: [] } };
-    const promises = [];
-
-    feeds = feeds.filter(item => item.rss_link).map(value => {
+  formatArray(feeds) {
+    return feeds.filter(item => item.rss_link).map(value => {
       const obj = {
         PutRequest: {
           Item: {
@@ -61,6 +61,16 @@ const dynamodb = {
 
       return obj;
     });
+  },
+  /**
+   * @param  {array} feeds An array of feeds to populate the DynamoDB table with
+   * @return {Promise}
+   */
+  populate(feeds) {
+    const params = { RequestItems: { topics: [] } };
+    const promises = [];
+
+    feeds = this.formatArray(feeds);
 
     const totalCalls = Math.ceil(feeds.length / maxChunks);
 
@@ -80,21 +90,23 @@ const dynamodb = {
   getAllTopics(lastScan) {
     this.topics = (lastScan && lastScan.Items) ? this.topics.concat(lastScan.Items) : [];
 
-    params.ExpressionAttributeValues = {
+    const assigned = Object.assign({}, params);
+
+    assigned.ExpressionAttributeValues = {
       ':a': {
         S: '0'
       }
     };
-    params.FilterExpression = 'enabled <> :a';
-    params.Limit = 100;
+    assigned.FilterExpression = 'enabled <> :a';
+    assigned.Limit = 100;
 
     if(lastScan !== undefined && lastScan.LastEvaluatedKey === undefined) {
       return new Promise((resolve) => {
         resolve(this.topics);
       });
     } else {
-      params.ExclusiveStartKey = (lastScan && lastScan.LastEvaluatedKey) ? lastScan.LastEvaluatedKey : null;
-      return aws.scan(params).promise().then((result) => this.getAllTopics(result));
+      assigned.ExclusiveStartKey = (lastScan && lastScan.LastEvaluatedKey) ? lastScan.LastEvaluatedKey : null;
+      return aws.scan(assigned).promise().then((result) => this.getAllTopics(result));
     }
   }
 };

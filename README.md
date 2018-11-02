@@ -17,14 +17,19 @@ For local development, it is also useful to have:
 ## Setup
 You will need to setup environment variables with your own details. The following are required:
 ```bash
+export AWS_ACCESS_ID=
+export AWS_SECRET_KEY=
 export AWS_DYNAMODB_ENDPOINT=
 export AWS_DYNAMODB_REGION=
 export MC_API_KEY=
 ```
 
 Defaults:
-`AWS_DYNAMODB_ENDPOINT`: `http://localhost:8000`
-`AWS_DYNAMODB_REGION`: `local`
+```AWS_ACCESS_ID: notARealAccessId
+AWS_SECRET_KEY: notARealSecretKey
+AWS_DYNAMODB_ENDPOINT: http://localhost:8000
+AWS_DYNAMODB_REGION: local
+```
 
 `MC_API_KEY` does not have a default and the application will fail if it tries to connect to MailChimp without an API key present.
 
