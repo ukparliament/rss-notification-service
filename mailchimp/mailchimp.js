@@ -36,21 +36,28 @@ const mailchimp = {
     return MailInstance.batch(calls, { interval: 5000, unpack: true });
   },
   filterUsers(users, topicId) {
+    if(!topicId) {
+      throw new Error('No topicId present in filterUsers');
+    }
+
     let masterList = [];
 
     for (let i = 0; i < users.length; i++) {
       if(users[i].members) {
         masterList = masterList.concat(users[i].members);
+      } else {
+        throw new Error('Malformed users in filterUsers');
       }
     }
 
     return masterList.filter(value => value.merge_fields && value.merge_fields.AEID).filter(value => value.merge_fields.AEID.split(',').includes(topicId.toString()));
   },
-  async setCachedUsers(users) {
+  setCachedUsers(users) {
     this.cachedUsers = {
       last_updated: new Date(),
       users
     };
+    return this.cachedUsers;
   },
   getCachedUsers() {
     return this.cachedUsers;

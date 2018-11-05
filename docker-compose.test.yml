@@ -7,6 +7,7 @@ services:
     environment:
       - AWS_DYNAMODB_ENDPOINT=http://dynamodbtest:8000
       - NODE_ENV=test
+      - MC_API_KEY=test-us18
     depends_on:
       - dynamodbtest
     ports:
