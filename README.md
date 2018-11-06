@@ -21,6 +21,9 @@ export AWS_ACCESS_ID=
 export AWS_SECRET_KEY=
 export AWS_DYNAMODB_ENDPOINT=
 export AWS_DYNAMODB_REGION=
+export AWS_SES_ENDPOINT=
+export AWS_SES_REGION=
+export AWS_SES_FROM_EMAIL=
 export MC_API_KEY=
 ```
 
@@ -29,6 +32,9 @@ Defaults:
 AWS_SECRET_KEY: notARealSecretKey
 AWS_DYNAMODB_ENDPOINT: http://localhost:8000
 AWS_DYNAMODB_REGION: local
+AWS_SES_ENDPOINT: http://localhost:9001
+AWS_SES_REGION: local
+AWS_SES_FROM_EMAIL: noreply@localhost
 ```
 
 `MC_API_KEY` does not have a default and the application will fail if it tries to connect to MailChimp without an API key present.

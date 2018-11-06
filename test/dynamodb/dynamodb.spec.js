@@ -1,6 +1,5 @@
 const { assert } = require('chai'),
       ddblocal = require('local-dynamo'),
-      sinon = require('sinon'),
       aws = require('../../dynamodb/dynamodb.js'),
       expected = require('../fixtures/json/dynamodb.json'),
       helper = require('../../dynamodb/helper.js'),
@@ -8,7 +7,6 @@ const { assert } = require('chai'),
 
 describe('DynamoDB', () => {
 
-  let sandbox;
   let dynamoInstance;
 
   before(() => {
@@ -25,12 +23,10 @@ describe('DynamoDB', () => {
 
   beforeEach(async () => {
     await aws.setup();
-    sandbox = sinon.createSandbox();
   })
 
   afterEach(async () => {
     await aws.deleteTable();
-    sandbox = sandbox.restore();
   });
 
   describe('uses the correct config', () => {

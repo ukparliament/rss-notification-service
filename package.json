@@ -18,11 +18,11 @@
   },
   "homepage": "https://github.com/ukparliament/rss-notification-service#readme",
   "dependencies": {
-    "aws-sdk": "^2.348.0",
+    "aws-sdk": "^2.349.0",
     "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.2",
     "mailchimp-api-v3": "^1.12.0",
-    "rss-parser": "^3.5.2"
+    "rss-parser": "^3.5.3"
   },
   "devDependencies": {
     "chai": "^4.2.0",
