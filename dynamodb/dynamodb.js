@@ -4,6 +4,9 @@ const aws = require('./helper.js'),
 let params = { TableName: 'topics' };
 
 const dynamodb = {
+  tableExists() {
+    return aws.describeTable(params).promise().catch((error) => { return false; });
+  },
   /**
    * Delete the DynamoDB table
    * @return {Promise}
@@ -16,7 +19,12 @@ const dynamodb = {
    * Creates and provisions the DynamoDB table with key schema
    * @return {Promise}
    */
-  setup() {
+  async setup() {
+    const exists = await this.tableExists();
+    if(exists) {
+      return new Promise(function(resolve) { resolve(exists) });
+    }
+
     const assigned = Object.assign({}, params);
     assigned.KeySchema = [
       {
