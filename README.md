@@ -44,6 +44,7 @@ AWS_SES_FROM_EMAIL: noreply@localhost
 git clone https://github.com/ukparliament/rss-notification-service.git
 cd rss-notification-service
 npm install && npm test
+npm start
 ```
 
 ## Contributing

@@ -3,8 +3,7 @@ pipelines:
     group: main
     label_template: "${COUNT}"
     environment_variables:
-      RACK_ENV: development
-      PARLIAMENT_API_VERSION: Staging
+      NODE_ENV: development
     materials:
       parliament.uk-rss-notification-service-git:
         git: https://github.com/ukparliament/rss-notification-service.git
@@ -39,10 +38,6 @@ pipelines:
                     command: make
                     arguments:
                       - deploy-ecs
-
-
-
-
 
 environments:
   Web.DEVCI:
