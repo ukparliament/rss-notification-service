@@ -2,10 +2,18 @@ const ddb = require('./dynamodb/dynamodb.js');
 const poller = require('./poller/poller.js');
 const bills = require('./sources/bills.js');
 const committees = require('./sources/committees.js');
+const fs = require('fs');
 
 function sleep() {
   return new Promise(resolve => {
     setTimeout(resolve, 300000);
+  });
+}
+
+function setupHealthcheck() {
+  return new Promise((resolve) => {
+    fs.writeFileSync('healthcheck.txt', process.pid);
+    resolve();
   });
 }
 
@@ -15,8 +23,7 @@ async function setup() {
   console.info('Retrieving all sources (public_bill, private_bill, committees)...');
   const sources = await Promise.all([
     bills.getAll('https://services.parliament.uk/Bills/AllPublicBills.rss', 'public_bill'),
-    bills.getAll('https://services.parliament.uk/Bills/AllPrivateBills.rss', 'private_bill'),
-    committees.getBase('https://www.parliament.uk/business/committees/committees-a-z/', 'committee').then((res) => committees.getRssFeeds(res))
+    bills.getAll('https://services.parliament.uk/Bills/AllPrivateBills.rss', 'private_bill')
   ]);
   console.info('Populating DynamoDB...');
   await ddb.populate([].concat.apply([], sources));
@@ -34,4 +41,4 @@ async function start() {
   return start();
 }
 
-setup().then(start);
+setupHealthcheck().then(setup).then(start);
