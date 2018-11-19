@@ -53,16 +53,16 @@ checkout_to_release:
 
 build: # Using the variables defined above, run `docker build`, tagging the image and passing in the required arguments.
 	docker build -t $(IMAGE):$(VERSION) -t $(IMAGE):latest \
-	--build-arg AWS_DYNAMODB_ENDPOINT=$(AWS_DYNAMODB_ENDPOINT) \
-	--build-arg AWS_DYNAMODB_REGION=$(AWS_DYNAMODB_REGION) \
-	--build-arg AWS_SES_ENDPOINT=$(AWS_SES_ENDPOINT) \
-	--build-arg AWS_SES_FROM_EMAIL=$(AWS_SES_FROM_EMAIL) \
-	--build-arg AWS_SES_REGION=$(AWS_SES_REGION) \
-	--build-arg MC_API_KEY=$(MC_API_KEY) \
-	--build-arg NODE_ENV=$(NODE_ENV) \
-	--build-arg AWS_ACCESS_ID=$(AWS_ACCESS_ID) \
-	--build-arg AWS_SECRET_KEY=$(AWS_SECRET_KEY)
-	.
+		--build-arg AWS_DYNAMODB_ENDPOINT=$(AWS_DYNAMODB_ENDPOINT) \
+		--build-arg AWS_DYNAMODB_REGION=$(AWS_DYNAMODB_REGION) \
+		--build-arg AWS_SES_ENDPOINT=$(AWS_SES_ENDPOINT) \
+		--build-arg AWS_SES_FROM_EMAIL=$(AWS_SES_FROM_EMAIL) \
+		--build-arg AWS_SES_REGION=$(AWS_SES_REGION) \
+		--build-arg MC_API_KEY=$(MC_API_KEY) \
+		--build-arg NODE_ENV=$(NODE_ENV) \
+		--build-arg AWS_ACCESS_ID=$(AWS_ACCESS_ID) \
+		--build-arg AWS_SECRET_KEY=$(AWS_SECRET_KEY) \
+		.
 
 run: # Run the Docker image we have created, mapping the HOST_PORT and CONTAINER_PORT
 	docker run --rm -p $(HOST_PORT):$(CONTAINER_PORT) $(IMAGE)
