@@ -46,7 +46,9 @@ const dynamodb = {
       WriteCapacityUnits: 1
     }
 
-    return aws.createTable(assigned).promise().then(() => aws.waitFor('tableExists', assigned));
+    return aws.createTable(assigned).promise().then(() => aws.waitFor('tableExists', assigned)).catch((error) => {
+      console.log('Setup error', error);
+    });
   },
   /**
    * Cleans up and formats array for DynamoDB population
