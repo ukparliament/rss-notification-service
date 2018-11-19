@@ -32,6 +32,22 @@ describe('MailChimp', () => {
     sandbox = sandbox.restore();
   });
 
+  describe('get subscribers', () => {
+    it('gets subscribers from MailChimp if last_updated is null', async () => {
+      const spy = sandbox.spy(mailchimp, 'getAllLists');
+      const secondSpy = sandbox.spy(mailchimp, 'getAllSubscribers');
+      const result = await mailchimp.getSubscribers();
+      sandbox.assert.calledOnce(secondSpy);
+      return sandbox.assert.calledOnce(spy);
+    });
+    it('gets subscribers from cache if last_updated is less than a day ago', async () => {
+      mailchimp.setCachedUsers(['fake']);
+      const spy = sandbox.spy(mailchimp, 'getAllLists');
+      const result = await mailchimp.getSubscribers();
+      return sandbox.assert.notCalled(spy);
+    });
+  });
+
   describe('gets all lists in an account', () => {
     it('returns an array of lists', async () => {
       const result = await mailchimp.getAllLists();

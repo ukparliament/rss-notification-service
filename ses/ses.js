@@ -51,6 +51,11 @@ const emails = {
       }))
     }));
   },
+  /**
+   * Format options for SES to send the email
+   * @param  {object} changes Object of a singular feeds changes
+   * @return {object}         Formatted object
+   */
   formatSendOptions(changes) {
     changes.assetUrl = assetUrl;
     return {
