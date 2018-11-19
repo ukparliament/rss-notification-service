@@ -61,7 +61,7 @@ build: # Using the variables defined above, run `docker build`, tagging the imag
 	--build-arg MC_API_KEY=$(MC_API_KEY) \
 	--build-arg NODE_ENV=$(NODE_ENV) \
 	--build-arg AWS_ACCESS_ID=$(AWS_ACCESS_ID) \
-	--build-arg AWS_SECRET_KEY=$(AWS_SECRET_KEY) \
+	--build-arg AWS_SECRET_KEY=$(AWS_SECRET_KEY)
 	.
 
 run: # Run the Docker image we have created, mapping the HOST_PORT and CONTAINER_PORT
