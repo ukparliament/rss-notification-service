@@ -1,8 +1,6 @@
 const AWS = require('aws-sdk');
 AWS.config.update({
-  region: process.env.AWS_SES_REGION || 'local',
-  accessKeyId: process.env.AWS_ACCESS_ID || 'notARealAccessId',
-  secretAccessKey: process.env.AWS_SECRET_KEY || 'notARealSecretKey'
+  region: process.env.AWS_SES_REGION || 'local'
 });
 
 module.exports = new AWS.SES({

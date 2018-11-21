@@ -8,7 +8,7 @@ The [RSS Notification Service][rns] is currently a prototype for polling data se
 * [NodeJS][node]
 * [NPM][npm]
 * [MailChimp][mailchimp] API key
-* An [AWS][aws] account, specifically with [SES][ses] and [DynamoDB][ddb]
+* An [AWS][aws] account, specifically with [SES][ses] and [DynamoDB][ddb], with an [AWS profile configured][aws_configure_setup] on your local machine
 
 For local development, it is also useful to have:
 * [DynamoDB local][ddbl]
@@ -17,8 +17,6 @@ For local development, it is also useful to have:
 ## Setup
 You will need to setup environment variables with your own details. The following are required:
 ```bash
-export AWS_ACCESS_ID=
-export AWS_SECRET_KEY=
 export AWS_DYNAMODB_ENDPOINT=
 export AWS_DYNAMODB_REGION=
 export AWS_SES_ENDPOINT=
@@ -28,8 +26,7 @@ export MC_API_KEY=
 ```
 
 Defaults:
-```AWS_ACCESS_ID: notARealAccessId
-AWS_SECRET_KEY: notARealSecretKey
+```
 AWS_DYNAMODB_ENDPOINT: http://localhost:8000
 AWS_DYNAMODB_REGION: local
 AWS_SES_ENDPOINT: http://localhost:9001
@@ -64,6 +61,7 @@ If you wish to submit a bug fix or feature, you can create a pull request and it
 [node]: https://nodejs.org/
 [npm]: https://www.npmjs.com/
 [aws]: https://aws.amazon.com/
+[aws_configure_setup]: https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
 [mailchimp]: https://mailchimp.com
 [ses]: https://aws.amazon.com/ses/
 [ddb]: https://aws.amazon.com/dynamodb/
