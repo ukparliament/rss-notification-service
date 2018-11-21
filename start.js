@@ -10,13 +10,6 @@ function sleep() {
   });
 }
 
-function setupHealthcheck() {
-  return new Promise((resolve) => {
-    fs.writeFileSync('healthcheck.txt', process.pid);
-    resolve();
-  });
-}
-
 async function setup() {
   console.info('Setting up DynamoDB...');
   const setup = await ddb.setup();
@@ -41,4 +34,4 @@ async function start() {
   return start();
 }
 
-setupHealthcheck().then(setup).then(start);
+setup().then(start);

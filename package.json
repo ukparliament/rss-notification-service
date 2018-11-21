@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "node ./node_modules/.bin/nyc --reporter=lcov --reporter=html ./node_modules/.bin/mocha --recursive --timeout 30s test",
-    "start": "node start.js"
+    "start": "node start.js",
+    "healthcheck": "node helpers/healthcheck.js"
   },
   "repository": {
     "type": "git",
@@ -18,11 +19,12 @@
   },
   "homepage": "https://github.com/ukparliament/rss-notification-service#readme",
   "dependencies": {
-    "aws-sdk": "^2.355.0",
+    "aws-sdk": "^2.360.0",
     "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.2",
-    "mailchimp-api-v3": "^1.12.0",
-    "rss-parser": "^3.5.3"
+    "express": "^4.16.4",
+    "mailchimp-api-v3": "^1.12.1",
+    "rss-parser": "^3.5.4"
   },
   "devDependencies": {
     "chai": "^4.2.0",
