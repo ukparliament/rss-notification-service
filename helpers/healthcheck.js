@@ -2,5 +2,6 @@ const express = require('express'),
       app = express(),
       port = 3000;
 
-app.get('/', (req, res) => res.send('OK'))
-app.listen(port, () => console.log(`Healthcheck running on ${port}`))
+app.get('/', (req, res) => res.send('OK'));
+
+module.exports = app.listen(port, () => console.log(`Healthcheck running on ${port}`));

@@ -2,6 +2,7 @@ const ddb = require('./dynamodb/dynamodb.js');
 const poller = require('./poller/poller.js');
 const bills = require('./sources/bills.js');
 const committees = require('./sources/committees.js');
+const healthcheck = require('./helpers/healthcheck.js');
 const fs = require('fs');
 
 function sleep() {
