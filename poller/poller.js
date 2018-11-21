@@ -50,8 +50,12 @@ const poller = {
        */
       const normalisedCachedDate = new Date(cachedDate.setMinutes(cachedDate.getMinutes() - cachedDate.getTimezoneOffset()));
 
-      feed.items = feed.items.filter(item => new Date(item.isoDate) > new Date(normalisedCachedDate));
-      return feed;
+      return {
+        items: feed.items.filter(item => new Date(item.isoDate) > new Date(normalisedCachedDate)),
+        title: `${feed.title} (${feed.feedUrl}) at ${feed.pubDate} (current server time: ${new Date()}`,
+        feedUrl: feed.feedUrl,
+        updated: feed.pubDate
+      };
     }).filter(feed => feed.items.length);
 
     return newArticles;
