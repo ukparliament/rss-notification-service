@@ -22,6 +22,9 @@ ENV NODE_ENV $NODE_ENV
 
 RUN echo "Environment: (NODE_ENV): $NODE_ENV" && npm install
 
-HEALTHCHECK --interval=5s --timeout=3s CMD node healthcheck.js
+EXPOSE 3000
+
+HEALTHCHECK --interval=5s --timeout=3s CMD curl --fail http://localhost:3000 || exit 1
 
 CMD [ "npm", "start" ]
+CMD [ "npm", "healthcheck" ]
