@@ -22,8 +22,8 @@ ENV NODE_ENV $NODE_ENV
 
 RUN echo "Environment: (NODE_ENV): $NODE_ENV" && npm install
 
-EXPOSE 3000
+EXPOSE 119
 
-HEALTHCHECK --interval=5s --timeout=3s CMD curl --fail http://localhost:3000 || exit 1
+HEALTHCHECK --interval=5s --timeout=3s CMD curl --fail http://localhost:119 || exit 1
 
 CMD [ "npm", "start" ]
