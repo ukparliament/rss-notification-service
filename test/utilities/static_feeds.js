@@ -5,7 +5,7 @@ const fixtures = require('./fixtures.js'),
 module.exports = {
   feeds: sliced.map(val => Object.assign({}, val, {
     rss_link: {
-      S: fixtures.outputHtml('single_feed.rss')
+      S: fixtures.outputHtml('single_bill_feed.rss')
     }
   })),
   feedThatDoesntWork: sliced.map(val => Object.assign({}, val, {

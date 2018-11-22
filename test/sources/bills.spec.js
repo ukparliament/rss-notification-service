@@ -1,7 +1,7 @@
 const bills = require('../../sources/bills.js'),
       expected = require('../fixtures/json/sources.json'),
-      fixtures = require('../helpers/fixtures.js'),
-      rssParser = require('rss-parser');
+      fixtures = require('../utilities/fixtures.js'),
+      rssParser = require('rss-parser'),
       sinon = require('sinon'),
       { assert } = require('chai');
 

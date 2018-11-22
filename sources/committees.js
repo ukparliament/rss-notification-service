@@ -1,5 +1,12 @@
 const axios = require('axios'),
-      cheerio = require('cheerio');
+      cheerio = require('cheerio'),
+      rssParser = require('rss-parser');
+
+const parser = new rssParser({
+  customFields: {
+    item: [ ['a10:updated', 'updated'] ]
+  }
+});
 
 const committees = {
   /**
@@ -38,9 +45,23 @@ const committees = {
     for(const item in committees) {
       const rss_link = await this.getCmsPageInstanceId(committees[item].guid);
       committees[item].rss_link = rss_link ? `https://www.parliament.uk/g/rss/committee-feed/?type=Committee_Detail_Mixed&pageInstanceId=${rss_link}` : '';
-      committees[item].enabled = rss_link ? 1 : 0;
     }
 
+    return committees;
+  },
+  async getFeedInformation(committees) {
+    for(const item in committees) {
+      try {
+        const rss_feed = await parser.parseURL(committees[item].rss_link);
+        committees[item].description = rss_feed.description;
+        committees[item].enabled = 1;
+        committees[item].last_updated = rss_feed.items[0].isoDate;
+      }
+      catch(e) {
+        console.warn(`Failed to get feed: ${committees[item].title} (${committees[item].rss_link}), (${e}), so it has been disabled, continuing...`);
+        continue;
+      }
+    }
     return committees;
   },
   /**
