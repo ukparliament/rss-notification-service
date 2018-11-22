@@ -67,10 +67,51 @@ describe('Poller', () => {
     })
   });
 
+  describe('is newer', () => {
+    it('correctly returns false if both dates are the same', () => {
+      return assert.equal(poller.isNewer('2018-07-11T22:13:38Z', '2018-07-11T22:13:38Z'), false);
+    });
+    it('correctly returns false if both dates are the same, but the "master" date is in BST (as it\'s stripped)', () => {
+      return assert.equal(poller.isNewer('2018-07-11T22:13:38+01:00', '2018-07-11T22:13:38Z'), false);
+    });
+    it('correctly returns false if both dates are the same, but the "singular" date is in BST (as it\'s stripped)', () => {
+      return assert.equal(poller.isNewer('2018-07-11T22:13:38Z', '2018-07-11T22:13:38+01:00'), false);
+    });
+    it('correctly returns false if both dates are the same, in BST (as it\'s stripped)', () => {
+      return assert.equal(poller.isNewer('2018-07-11T22:13:38+01:00', '2018-07-11T22:13:38+01:00'), false);
+    });
+
+    it('correctly returns false if master is newer than singular', () => {
+      return assert.equal(poller.isNewer('2018-07-11T22:13:39Z', '2018-07-11T22:13:38Z'), false);
+    });
+    it('correctly returns false if master is newer than singular, even if master is BST', () => {
+      return assert.equal(poller.isNewer('2018-07-11T22:13:39+01:00', '2018-07-11T22:13:38Z'), false);
+    });
+    it('correctly returns false if master is newer than singular, even if singular is BST', () => {
+      return assert.equal(poller.isNewer('2018-07-11T22:13:39Z', '2018-07-11T22:13:38+01:00'), false);
+    });
+    it('correctly returns false if master is newer than singular, even if both are BST', () => {
+      return assert.equal(poller.isNewer('2018-07-11T22:13:39+01:00', '2018-07-11T22:13:38+01:00'), false);
+    });
+
+    it('correctly returns true if singular is newer', () => {
+      return assert.equal(poller.isNewer('2018-07-11T22:13:38Z', '2018-07-11T22:13:39Z'), true);
+    });
+    it('correctly returns true if singular is newer, but UTC, and master is in BST (as it\'s stripped)', () => {
+      return assert.equal(poller.isNewer('2018-07-11T22:13:38+01:00', '2018-07-11T22:13:39Z'), true);
+    });
+    it('correctly returns true if singular is newer, if singular is in BST and master isn\'t (as it\'s stripped)', () => {
+      return assert.equal(poller.isNewer('2018-07-11T22:13:38Z', '2018-07-11T22:13:39+01:00'), true);
+    });
+    it('correctly returns true if singular is newer, even if both dates are in BST (as it\'s stripped)', () => {
+      return assert.equal(poller.isNewer('2018-07-11T22:13:38+01:00', '2018-07-11T22:13:39+01:00'), true);
+    });
+  });
+
   describe('checker', () => {
     it('correctly returns an empty array if there are no new articles', async () => {
       sandbox.stub(poller, 'getSingleCachedFeed').callsFake(() => {
-        expected.singleCachedFeed.last_updated.S = new Date();
+        expected.singleCachedFeed.last_updated.S = new Date().toISOString();
         return expected.singleCachedFeed;
       });
 
@@ -81,7 +122,7 @@ describe('Poller', () => {
 
     it('correctly returns an array with objects if there are new articles', async () => {
       sandbox.stub(poller, 'getSingleCachedFeed').callsFake(() => {
-        expected.singleCachedFeed.last_updated.S = new Date().setFullYear(0);
+        expected.singleCachedFeed.last_updated.S = new Date(2005, 1, 1).toISOString();
         return expected.singleCachedFeed;
       });
 

@@ -14,6 +14,24 @@ const poller = {
     return this.cachedFeeds.find(val => val.rss_link.S.toLowerCase().endsWith(new URL(feedUrl.toLowerCase()).pathname));
   },
   /**
+   * Normalises dates due to inconsistencies in master and singular feeds, and returns whether there are newer articles
+   * Caveat: If both Master and Singular dates hold timezone information (+01:00), then the inconsistency has been fixed
+   *         hence the need to check if masterDate does, and singularDate doesn't, include +01:00 (and vice versa).
+   * @param  {string}  masterDate   Date string from the master feed
+   * @param  {string}  singularDate Date string from the singular feed
+   * @return {boolean}              True if singular date is newer, false if not
+   */
+  isNewer(masterDate, singularDate) {
+    if(masterDate.includes('+01:00') && !singularDate.includes('+01:00')) {
+      masterDate = masterDate.replace('+01:00', 'Z');
+    }
+    if(!masterDate.includes('+01:00') && singularDate.includes('+01:00')) {
+      singularDate = singularDate.replace('+01:00', 'Z');
+    }
+
+    return (new Date(singularDate) > new Date(masterDate));
+  },
+  /**
    * Requests and parses feeds
    * @param  {string} feed URL for XML feed to parse
    * @return {Promise}
@@ -42,23 +60,11 @@ const poller = {
    * @return {array}       Array of parsed feeds, minus any that don't have new articles
    */
   checkFeeds(feeds) {
-    const newArticles = feeds.map(feed => {
-      const cachedDate = new Date(poller.getSingleCachedFeed(feed.feedUrl).last_updated.S);
-
-      /*
-        We have to normalise the cachedDate, as the singular feeds don't include timezones (i.e. outputs GMT for GMT+1), so we need to remove the extra difference from the cachedDate
-       */
-      const normalisedCachedDate = new Date(cachedDate.setMinutes(cachedDate.getMinutes() - cachedDate.getTimezoneOffset()));
-
-      return {
-        items: feed.items.filter(item => new Date(item.isoDate) > new Date(normalisedCachedDate)),
-        title: `${feed.title} (${feed.feedUrl}) at ${feed.pubDate} (current server time: ${new Date()}`,
-        feedUrl: feed.feedUrl,
-        updated: feed.pubDate
-      };
+    return feeds.map(feed => {
+      const cachedDate = poller.getSingleCachedFeed(feed.feedUrl).last_updated.S;
+      feed.items = feed.items.filter(item => poller.isNewer(cachedDate, item.isoDate));
+      return feed;
     }).filter(feed => feed.items.length);
-
-    return newArticles;
   }
 };
 
