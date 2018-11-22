@@ -1,4 +1,5 @@
 const aws = require('./helper.js'),
+      crypto = require('crypto'),
       maxChunks = 25;
 
 let params = { TableName: 'topics' };
@@ -60,7 +61,7 @@ const dynamodb = {
       const obj = {
         PutRequest: {
           Item: {
-            topic_id: { S: value.rss_link }
+            topic_id: { S: crypto.createHash('md5').update(value.rss_link).digest('hex').substring(0, 8) }
           }
         }
       };
