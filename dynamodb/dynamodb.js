@@ -23,7 +23,7 @@ const dynamodb = {
   async setup() {
     const exists = await this.tableExists();
     if(exists) {
-      return new Promise(function(resolve) { resolve(exists) });
+      return new Promise(resolve => { resolve(exists) });
     }
 
     const assigned = Object.assign({}, params);

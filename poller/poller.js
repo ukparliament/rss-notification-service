@@ -1,17 +1,16 @@
 const rssParser = require('rss-parser'),
       { URL } = require('url'),
-      parser = new rssParser({ maxRedirects: 50 }),
-      interval = 600000; // 10 minutes in milliseconds
+      parser = new rssParser({ maxRedirects: 50 });
 
 const poller = {
   cachedFeeds: [],
   /**
    * Gets a feed object from a list of feeds that are stored in this object
-   * @param  {string} feedUrl feedURL to get information for
-   * @return {object}         Object of feed information, or undefined if not found
+   * @param  {string} guid GUID to get information for
+   * @return {object}      Object of feed information, or undefined if not found
    */
-  getSingleCachedFeed(feedUrl) {
-    return this.cachedFeeds.find(val => val.rss_link.S.toLowerCase().endsWith(new URL(feedUrl.toLowerCase()).pathname));
+  getSingleCachedFeed(guid) {
+    return this.cachedFeeds.find(val => val.guid.S.toLowerCase().endsWith(new URL(guid.toLowerCase()).pathname));
   },
   /**
    * Normalises dates due to inconsistencies in master and singular feeds, and returns whether there are newer articles
@@ -39,6 +38,7 @@ const poller = {
   parse(feed) {
     return parser.parseURL(feed).catch(error => {
       console.warn(`Error for feed: ${feed}: "${error}", but carrying on...`);
+      return error;
     });
   },
   /**
@@ -48,10 +48,7 @@ const poller = {
    */
   requestFeeds(feeds) {
     this.cachedFeeds = feeds;
-    const mappedFeeds = feeds.filter(item => item.rss_link && item.rss_link.S && item.enabled && item.enabled.S).map((item) => {
-      return this.parse(item.rss_link.S);
-    });
-
+    const mappedFeeds = feeds.filter(item => item.rss_link && item.rss_link.S && item.enabled && item.enabled.S).map((item) => this.parse(item.rss_link.S));
     return Promise.all(mappedFeeds);
   },
   /**
@@ -61,7 +58,7 @@ const poller = {
    */
   checkFeeds(feeds) {
     return feeds.map(feed => {
-      const cachedDate = poller.getSingleCachedFeed(feed.feedUrl).last_updated.S;
+      const cachedDate = poller.getSingleCachedFeed(feed.link).last_updated.S;
       feed.items = feed.items.filter(item => poller.isNewer(cachedDate, item.isoDate));
       return feed;
     }).filter(feed => feed.items.length);

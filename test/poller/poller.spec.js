@@ -2,10 +2,10 @@ const { assert } = require('chai'),
       sinon = require('sinon'),
       rssParser = require('rss-parser'),
       poller = require('../../poller/poller.js'),
-      fixtures = require('../helpers/fixtures.js'),
+      fixtures = require('../utilities/fixtures.js'),
       expected = require('../fixtures/json/poller.json'),
       mockDdbItems = require('../fixtures/json/dynamodb.json'),
-      helper = require('../helpers/static_feeds.js');
+      helper = require('../utilities/static_feeds.js');
 
 describe('Poller', () => {
 
@@ -24,11 +24,11 @@ describe('Poller', () => {
 
   describe('cached feeds', () => {
     it('correctly returns a single feed matching a pathname', () => {
-      const res = poller.getSingleCachedFeed('https://services.parliament.uk/Bills/RSS/crimeoverseasproductionorders.xml');
+      const res = poller.getSingleCachedFeed('http://services.parliament.uk/bills/2017-19/crimeoverseasproductionorders.html');
       return assert.deepEqual(res, expected.singleCachedFeed);
     });
     it('returns a single feed, case insensitive, matching a pathname', () => {
-      const res = poller.getSingleCachedFeed('https://services.parliament.uk/Bills/RSS/crimeoverseasproductionorders.xml'.toUpperCase());
+      const res = poller.getSingleCachedFeed('http://services.parliament.uk/bills/2017-19/crimeoverseasproductionorders.html'.toUpperCase());
       return assert.deepEqual(res, expected.singleCachedFeed);
     });
     it('returns undefined if feed not found', () => {
@@ -41,7 +41,7 @@ describe('Poller', () => {
 
   describe('parser', () => {
     it('correctly returns a parsed RSS feeds', async () => {
-      const res = await poller.parse(fixtures.outputHtml('single_feed.rss'));
+      const res = await poller.parse(fixtures.outputHtml('single_bill_feed.rss'));
       return assert.deepEqual(res, expected.parsedFeed);
     });
     it('correctly outputs a non-blocking error (console.warn)', async () => {

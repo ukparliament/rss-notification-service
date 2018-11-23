@@ -1,7 +1,8 @@
 const axios = require('axios'),
+      rssParser = require('rss-parser'),
       committees = require('../../sources/committees.js'),
       expected = require('../fixtures/json/sources.json'),
-      fixtures = require('../helpers/fixtures.js'),
+      fixtures = require('../utilities/fixtures.js'),
       sinon = require('sinon'),
       { assert } = require('chai');
 
@@ -55,6 +56,28 @@ describe('Sources - Committees', () => {
 
       const result = await committees.getCmsPageInstanceId();
       return assert.equal(result, '');
+    });
+  });
+
+  describe('retrives feed information', () => {
+    it('returns a committees array, with description, enabled, last_updated if it\'s resolved', async () => {
+      sandbox.stub(rssParser.prototype, 'parseURL').callsFake(rssParser.prototype.parseString);
+      const committeeMock = Object.assign({}, expected.committees_with_rss[0]);
+      committeeMock.rss_link = fixtures.outputHtml('single_committee_feed.rss');
+      const result = await committees.getFeedInformation([committeeMock]);
+      return assert.deepEqual(result, expected.committee_with_details);
+    });
+
+    it('returns a committees array, without description, enabled, last_updated if it can\'t be resolved', async () => {
+      sandbox.stub(rssParser.prototype, 'parseURL').callsFake(rssParser.prototype.parseString);
+      const spy = sandbox.spy(console, 'warn');
+
+      const committeeMock = Object.assign({}, expected.committees_with_rss[0]);
+      const result = await committees.getFeedInformation([committeeMock]);
+
+      sandbox.assert.calledOnce(spy);
+
+      return assert.deepEqual(result, expected.committee_without_details);
     });
   });
 
