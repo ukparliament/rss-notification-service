@@ -58,8 +58,9 @@ const poller = {
    */
   checkFeeds(feeds) {
     return feeds.map(feed => {
-      const cachedDate = poller.getSingleCachedFeed(feed.link).last_updated.S;
-      feed.items = feed.items.filter(item => poller.isNewer(cachedDate, item.isoDate));
+      const cachedFeed = poller.getSingleCachedFeed(feed.link);
+      feed.items = feed.items.filter(item => poller.isNewer(cachedFeed.last_updated.S, item.isoDate));
+      feed.aeid = cachedFeed.topic_id.S;
       return feed;
     }).filter(feed => feed.items.length);
   }

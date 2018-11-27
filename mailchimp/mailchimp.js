@@ -7,6 +7,19 @@ const mailchimp = {
     last_updated: null,
     users: []
   },
+  async getSubscribers(topicId) {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    let subscribers = this.cachedUsers.users;
+
+    if(this.cachedUsers.last_updated < yesterday) {
+      const lists = await this.getAllLists();
+      subscribers = await this.getAllSubscribers(lists);
+      this.setCachedUsers(subscribers);
+    }
+
+    return subscribers;
+  },
   getAllLists() {
     return MailInstance.get('/lists', { count: 50, fields: 'lists.id,lists.stats.member_count' });
   },
