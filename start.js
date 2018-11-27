@@ -23,7 +23,7 @@ async function setup() {
 
 function send(subscribers, changes) {
   for (let i = 0; i < changes.length; i++) {
-    const recipients = mailchimp.filterUsers(subscribers, 'test'); // Todo after test: change to to changes[i].aeid
+    const recipients = mailchimp.filterUsers(subscribers, 'test').map(r => r.email_address); // Todo after test: change to to changes[i].aeid
     const changeText = changes[i].items.map(r => {
       return `${r.title}\n${r.pubDate}\n${r.content}`;
     }).join('\n\n');
