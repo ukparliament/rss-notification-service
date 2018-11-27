@@ -57,7 +57,7 @@ const emails = {
       chunk.Message.Body.Html.Data = options.html;
       chunk.Message.Body.Text.Data = options.text;
       chunk.Message.Subject.Data = options.subject;
-      promises.push(ses.sendEmail(chunk).promise());
+      promises.push(ses.sendEmail(chunk).promise().catch((error) => { console.log('SES error', error) }));
     }
 
     return Promise.all(promises);
