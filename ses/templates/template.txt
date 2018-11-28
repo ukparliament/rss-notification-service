@@ -1,0 +1,23 @@
+UK Parliament
+
+You are subscribed to {{ title }} updates from Parliament.
+
+------------------------------------------------------------
+
+  {{#each items}}
+    * {{ this.title }} ({{ this.link }})
+    * {{ this.pubDate }}
+    * {{ this.content }}
+  {{/each}}
+
+============================================================
+** [UK Parliament]UK Parliament (https://www.parliament.uk/)
+** [Twitter]Twitter (https://twitter.com/ukparliament)
+** [Facebook]Facebook (https://facebook.com/ukparliament)
+** [Instagram]Instagram (https://instagram.com/ukparliament)
+
+Unsubscribe (https://email-subscriptions.parliament.uk/) | Manage your email subscriptions (https://email-subscriptions.parliament.uk/)
+
+View our privacy policy (https://www.parliament.uk/site-information/data-protection/uk-parliament-email-privacy-policy/)
+
+Our address is: Houses of Parliament, Westminster, London, SW1A 0AA
