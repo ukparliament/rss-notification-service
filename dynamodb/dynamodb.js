@@ -119,6 +119,31 @@ const dynamodb = {
       assigned.ExclusiveStartKey = (lastScan && lastScan.LastEvaluatedKey) ? lastScan.LastEvaluatedKey : null;
       return aws.scan(assigned).promise().then((result) => this.getAllTopics(result));
     }
+  },
+  /**
+   * Update topic based on topic_id
+   * @param  {string} topic_id    topic_id from DynamoDB
+   * @param  {string} updatedDate Date to update to
+   * @return {Promise}
+   */
+  updateTopic(topic_id, updatedDate) {
+    const assigned = Object.assign({}, params);
+    assigned.ExpressionAttributeNames = {
+      '#LU': 'last_updated'
+    };
+    assigned.ExpressionAttributeValues = {
+      ':lu': {
+        S: updatedDate.toISOString()
+      }
+    };
+    assigned.Key = {
+      'topic_id': {
+        S: topic_id
+      }
+    };
+    assigned.ReturnValues = 'ALL_NEW';
+    assigned.UpdateExpression = 'SET #LU = :lu';
+    return aws.updateItem(assigned).promise();
   }
 };
 
