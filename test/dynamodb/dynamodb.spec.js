@@ -35,6 +35,13 @@ describe('DynamoDB', () => {
     });
   });
 
+  describe('setup', () => {
+    it('returns a resolved Promise if the table already exists', async () => {
+      const result = await aws.setup();
+      return assert.typeOf(result, 'object');
+    });
+  });
+
   describe('populates the DynamoDB table', () => {
     it('adds items from mock file in one call with <= 25 items', async () => {
       const result = await aws.populate(mockItems.feeds.slice(0, 25));

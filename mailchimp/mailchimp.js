@@ -7,7 +7,7 @@ const mailchimp = {
     last_updated: null,
     users: []
   },
-  async getSubscribers(topicId) {
+  async getSubscribers() {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     let subscribers = this.cachedUsers.users;

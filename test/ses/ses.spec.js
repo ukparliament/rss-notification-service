@@ -13,7 +13,7 @@ describe('SES', () => {
   beforeEach(async () => {
     sandbox = sinon.createSandbox();
     sandbox.stub(helper, 'sendEmail').returns({
-      promise: () => { return expected.messageId }
+      promise: async () => { return expected.messageId }
     });
   })
 
@@ -30,6 +30,12 @@ describe('SES', () => {
   describe('formats template data correctly', () => {
     it('returns a formatted object with keys title, aeid, items', () => {
       return assert.deepEqual(aws.formatTemplateData(poller.newArticles), expected.formattedTemplateData);
+    });
+  });
+
+  describe('formats send options correctly', () => {
+    it('returns a formatted object with keys html, text, subject', () => {
+      return assert.deepEqual(aws.formatSendOptions(poller.newArticles[0]), expected.formattedSendOptions);
     });
   });
 
