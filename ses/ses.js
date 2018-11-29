@@ -1,6 +1,7 @@
 const fs = require('fs'),
       handlebars = require('handlebars'),
       ses = require('./helper.js'),
+      assetUrl = 'https://awsmigration.parliament.uk',
       templates = {
         html: handlebars.compile(fs.readFileSync('./ses/templates/template.html', 'utf-8')),
         text: handlebars.compile(fs.readFileSync('./ses/templates/template.txt', 'utf-8')),
@@ -51,6 +52,7 @@ const emails = {
     }));
   },
   formatSendOptions(changes) {
+    changes.assetUrl = assetUrl;
     return {
       html: templates.html(changes),
       text: templates.text(changes),
