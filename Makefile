@@ -11,7 +11,7 @@
 ##
 
 # App name used to created our Docker image. This name is important in the context of the AWS docker repository.
-APP_NAME = notificationservice
+APP_NAME = parliamentuknotificationservice
 
 # AWS account ID used to create our Docker image. This value is important in the context of the AWS docker repository.
 # When executed in GoCD, AWS_ACCOUNT_ID may be set by an environment variable
