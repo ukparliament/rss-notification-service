@@ -16,6 +16,7 @@ const poller = {
    * Normalises dates due to inconsistencies in master and singular feeds, and returns whether there are newer articles
    * Caveat: If both Master and Singular dates hold timezone information (+01:00), then the inconsistency has been fixed
    *         hence the need to check if masterDate does, and singularDate doesn't, include +01:00 (and vice versa).
+   *         At time of building, it is the Master feeds that hold timezone information, not Singular feeds.
    * @param  {string}  masterDate   Date string from the master feed
    * @param  {string}  singularDate Date string from the singular feed
    * @return {boolean}              True if singular date is newer, false if not

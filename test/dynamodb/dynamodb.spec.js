@@ -1,5 +1,6 @@
 const { assert } = require('chai'),
       ddblocal = require('local-dynamo'),
+      timekeeper = require('timekeeper'),
       aws = require('../../dynamodb/dynamodb.js'),
       expected = require('../fixtures/json/dynamodb.json'),
       helper = require('../../dynamodb/helper.js'),
@@ -78,6 +79,25 @@ describe('DynamoDB', () => {
       const result = await aws.getAllTopics();
       assert.equal(result.length, 100);
       return assert.deepEqual(result, expected.getItemsHundred);
+    });
+  });
+
+  describe('updates topics', () => {
+    before(() => { timekeeper.freeze(new Date(2005, 0, 1)) });
+    after(() => { timekeeper.reset() });
+
+    it('updates topic last_updated with a specified updatedDate', async () => {
+      const add = await aws.populate(mockItems.feeds.slice(0, 10));
+      const result = await aws.updateTopic('179329e8', new Date());
+      return assert.deepEqual(result, expected.updateItem);
+    });
+
+    it('throws an error if topic_id not found', async () => {
+      return assert.throws(() => aws.updateTopic(), 'No topicId present in updateTopic');
+    });
+
+    it('throws an error if updatedDate not set', async () => {
+      return assert.throws(() => aws.updateTopic('1234'), 'No updatedDate present in updateTopic');
     });
   });
 

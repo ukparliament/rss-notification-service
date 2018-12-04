@@ -35,6 +35,18 @@ const fs = require('fs'),
 
 const emails = {
   /**
+   * Format an item date
+   * @param  {string} date String from rssFeed item
+   * @return {string}      Formatted string
+   */
+  formatTemplateDate(date) {
+    date = new Date(date.replace('GMT', ''));
+    const dayOpts = { weekday: 'long' };
+    const dateOpts = { year: 'numeric', month: 'short', day: 'numeric' };
+    const timeOpts = { hour: '2-digit', minute: '2-digit', hour12: true };
+    return `${date.toLocaleString('en-GB', dayOpts)} ${date.toLocaleString('en-GB', dateOpts)} ${date.toLocaleString('en-GB', timeOpts).replace(' ', '').toLowerCase()}`;
+  },
+  /**
    * Format template data from an RSS feed for the SES template
    * @param  {object} rssFeed Object of an RSS feed
    * @return {object}         Formatted object for SES template
@@ -46,7 +58,7 @@ const emails = {
       items: feed.items.map(item => ({
         title: item.title,
         link: item.link,
-        pubDate: item.pubDate,
+        pubDate: this.formatTemplateDate(item.pubDate),
         content: item.content
       }))
     }));
