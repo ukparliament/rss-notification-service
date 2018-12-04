@@ -127,6 +127,13 @@ const dynamodb = {
    * @return {Promise}
    */
   updateTopic(topic_id, updatedDate) {
+    if(!topic_id) {
+      throw new Error('No topicId present in updateTopic');
+    }
+    if(!updatedDate) {
+      throw new Error('No updatedDate present in updateTopic');
+    }
+
     const assigned = Object.assign({}, params);
     assigned.ExpressionAttributeNames = {
       '#LU': 'last_updated'

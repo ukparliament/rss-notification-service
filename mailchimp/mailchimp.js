@@ -52,6 +52,9 @@ const mailchimp = {
     if(!topicId) {
       throw new Error('No topicId present in filterUsers');
     }
+    if(topicId.length !== 8) {
+      throw new Error('topicId not valid (required to be 8 characters)');
+    }
 
     let masterList = [];
 

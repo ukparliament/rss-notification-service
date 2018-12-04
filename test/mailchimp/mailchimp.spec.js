@@ -6,11 +6,12 @@ const mailchimp = require('../../mailchimp/mailchimp.js'),
       timekeeper = require('timekeeper'),
       sinon = require('sinon');
 
-timekeeper.freeze(new Date());
-
 describe('MailChimp', () => {
 
   let sandbox;
+
+  before(() => { timekeeper.freeze(new Date(2010, 0, 1)) });
+  after(() => { timekeeper.reset() });
 
   beforeEach(() => {
     sandbox = sinon.createSandbox();
@@ -64,30 +65,34 @@ describe('MailChimp', () => {
 
   describe('filters subscribers based on item ID', () => {
     it('returns an array of subscribers who are associated with an item ID', async () => {
-      const result = await mailchimp.filterUsers(mockItems.users, '43');
+      const result = await mailchimp.filterUsers(mockItems.users, '12345678');
       return assert.deepEqual(result, expected.filteredUsers);
     });
 
     it('throws an error if it can\'t find the "members" key', () => {
-      return assert.throws(() => mailchimp.filterUsers(mockItems.malformedUsers, '43'), 'Malformed users in filterUsers');
+      return assert.throws(() => mailchimp.filterUsers(mockItems.malformedUsers, '12345678'), 'Malformed users in filterUsers');
     });
 
     it('throws an error if topicId is not present', () => {
       return assert.throws(() => mailchimp.filterUsers(mockItems.users), 'No topicId present');
+    });
+
+    it('throws an error if topicId isn\'t valid (8 characters long)', () => {
+      return assert.throws(() => mailchimp.filterUsers(mockItems.users, '1'), 'topicId not valid (required to be 8 characters)');
     });
   });
 
   describe('correctly sets subscribers in cache', () => {
     it('sets subscribers in cache', () => {
       const result = mailchimp.setCachedUsers([ { email: 'fake@localhost' } ]);
-      return assert.deepEqual(result, {'last_updated': new Date(), 'users': [{'email':'fake@localhost'}]} );
+      return assert.deepEqual(result, {'last_updated': new Date(2010, 0, 1), 'users': [{'email':'fake@localhost'}]} );
     });
   });
 
   describe('returns subscribers stored in cache', () => {
     it('returns subscribers from cache', () => {
       const cached = mailchimp.getCachedUsers();
-      return assert.deepEqual(cached, {"last_updated": new Date() ,"users": [{"email":"fake@localhost"}]} );
+      return assert.deepEqual(cached, {"last_updated": new Date(2010, 0, 1) ,"users": [{"email":"fake@localhost"}]} );
     });
   });
 
