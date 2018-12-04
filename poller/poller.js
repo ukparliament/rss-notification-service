@@ -19,7 +19,7 @@ const poller = {
    *         At time of building, it is the Master feeds that hold timezone information, not Singular feeds.
    * @param  {string}  masterDate   Date string from the master feed
    * @param  {string}  singularDate Date string from the singular feed
-   * @return {boolean}              True if singular date is newer, false if not
+   * @return {boolean}              True if singular date is newer, false if not or singularDate is in the future of current time
    */
   isNewer(masterDate, singularDate) {
     if(masterDate.includes('+01:00') && !singularDate.includes('+01:00')) {
@@ -29,7 +29,15 @@ const poller = {
       singularDate = singularDate.replace('+01:00', 'Z');
     }
 
-    return (new Date(singularDate) > new Date(masterDate));
+    const singular = new Date(singularDate);
+    const master = new Date(masterDate);
+
+    // Return false if the singularDate is in the future (compared to new Date())
+    if(singular > new Date()) {
+      return false;
+    }
+
+    return (singular > master);
   },
   /**
    * Requests and parses feeds

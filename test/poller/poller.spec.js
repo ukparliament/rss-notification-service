@@ -106,6 +106,12 @@ describe('Poller', () => {
     it('correctly returns true if singular is newer, even if both dates are in BST (as it\'s stripped)', () => {
       return assert.equal(poller.isNewer('2018-07-11T22:13:38+01:00', '2018-07-11T22:13:39+01:00'), true);
     });
+
+    it('correctly returns false if singular is in the future compared to new Date()', () => {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      return assert.equal(poller.isNewer('2018-07-11T22:13:38Z', tomorrow.toISOString()), false);
+    });
   });
 
   describe('checker', () => {
