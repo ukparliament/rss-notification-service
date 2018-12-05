@@ -43,6 +43,14 @@ describe('DynamoDB', () => {
     });
   });
 
+  describe('reconcile', () => {
+    it('returns an array of only new topics', async () => {
+      const add = await aws.populate(mockItems.feeds.slice(0, 10));
+      const result = await aws.reconcile(mockItems.newTopic);
+      return assert.deepEqual(result, expected.reconcile);
+    });
+  });
+
   describe('populates the DynamoDB table', () => {
     it('adds items from mock file in one call with <= 25 items', async () => {
       const result = await aws.populate(mockItems.feeds.slice(0, 25));

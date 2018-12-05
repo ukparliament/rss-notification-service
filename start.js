@@ -17,7 +17,10 @@ async function setup() {
     committees.getBase('https://www.parliament.uk/business/committees/committees-a-z/').then((res) => committees.getRssFeeds(res)).then((res) => committees.getFeedInformation(res))
   ]);
   console.info('Populating DynamoDB...');
-  await dynamodb.populate([].concat.apply([], sources));
+  const newTopics = await dynamodb.reconcile([].concat.apply([], sources));
+  if(newTopics) {
+    await dynamodb.populate(newTopics);
+  }
   await helpers.sleep(1000); // Wait a second before continuing (connection cooldown)
 }
 
