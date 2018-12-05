@@ -8,6 +8,11 @@ const dynamodb = {
   tableExists() {
     return aws.describeTable(params).promise().catch((error) => { return false; });
   },
+  async reconcile(newTopics) {
+    const current = await this.getAllTopics();
+    const currentGuids = current.map(item => item.guid.S);
+    return newTopics.filter(item => !currentGuids.includes(item.guid));
+  },
   /**
    * Delete the DynamoDB table
    * @return {Promise}
