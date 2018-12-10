@@ -1,7 +1,7 @@
-.PHONY: build run test push scan-image rmi deploy-ecs airbrake
+.PHONY: build run test push rmi deploy-ecs checkout_to_release
 
 ##
-# Makefile used to build, test and (locally) run the parliament.uk-prototype project.
+# Makefile used to build, test and (locally) run the rss-notification project.
 ##
 
 ##
