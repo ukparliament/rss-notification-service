@@ -1,6 +1,6 @@
 pipelines:
   parliament.uk-rss-notification-service:
-    group: main
+    group: Main
     label_template: "${COUNT}"
     environment_variables:
       NODE_ENV: production
