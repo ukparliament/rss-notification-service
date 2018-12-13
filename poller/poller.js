@@ -10,7 +10,7 @@ const poller = {
    * @return {object}      Object of feed information, or undefined if not found
    */
   getSingleCachedFeed(guid) {
-    return this.cachedFeeds.find(val => val.guid.S.toLowerCase().endsWith(new URL(guid.toLowerCase()).pathname));
+    return this.cachedFeeds.find(val => val.guid.hasOwnProperty('S') ? val.guid.S.toLowerCase().endsWith(new URL(guid.toLowerCase()).pathname) : false);
   },
   /**
    * Normalises dates due to inconsistencies in master and singular feeds, and returns whether there are newer articles
@@ -68,7 +68,11 @@ const poller = {
   checkFeeds(feeds) {
     return feeds.map(feed => {
       const cachedFeed = poller.getSingleCachedFeed(feed.link);
-      feed.items = feed.items.filter(item => poller.isNewer(cachedFeed.last_updated.S, item.isoDate));
+      if(cachedFeed) {
+        feed.items = feed.items.filter(item => poller.isNewer(cachedFeed.last_updated.S, item.isoDate));
+      } else {
+        feed.items = [];
+      }
       feed.aeid = cachedFeed.topic_id.S;
       return feed;
     }).filter(feed => feed.items.length);
