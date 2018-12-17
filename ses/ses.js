@@ -1,7 +1,7 @@
 const fs = require('fs'),
       handlebars = require('handlebars'),
       ses = require('./helper.js'),
-      assetUrl = 'https://awsmigration.parliament.uk',
+      assetUrl = 'https://email-components.parliament.uk',
       templates = {
         html: handlebars.compile(fs.readFileSync('./ses/templates/template.html', 'utf-8')),
         text: handlebars.compile(fs.readFileSync('./ses/templates/template.txt', 'utf-8')),
