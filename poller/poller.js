@@ -69,7 +69,10 @@ const poller = {
     return feeds.map(feed => {
       const cachedFeed = poller.getSingleCachedFeed(feed.link);
       if(cachedFeed) {
-        feed.items = feed.items.filter(item => poller.isNewer(cachedFeed.last_updated.S, item.isoDate));
+        feed.items = feed.items.filter(item => {
+          const articleDate = item.isoDate ? item.isoDate : feed.lastBuildDate;
+          return poller.isNewer(cachedFeed.last_updated.S, articleDate);
+        });
       } else {
         feed.items = [];
       }
