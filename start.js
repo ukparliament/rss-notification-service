@@ -15,9 +15,7 @@ async function setup() {
   const sources = await Promise.all([
     bills.getAll('https://services.parliament.uk/Bills/AllPublicBills.rss', 'public_bill'),
     bills.getAll('https://services.parliament.uk/Bills/AllPrivateBills.rss', 'private_bill'),
-    committees.getBase('https://www.parliament.uk/business/committees/committees-a-z/').then((res) => committees.getRssFeeds(res)).then((res) => committees.getFeedInformation(res)),
-    researchBriefings.get('https://researchbriefings.parliament.uk/rssfeed/Commons%20Briefing%20papers'),
-    researchBriefings.get('https://researchbriefings.parliament.uk/rssfeed/Commons%20Debate%20packs')
+    committees.getBase('https://www.parliament.uk/business/committees/committees-a-z/').then((res) => committees.getRssFeeds(res)).then((res) => committees.getFeedInformation(res))
   ]);
   console.info('Populating DynamoDB...');
   const newTopics = await dynamodb.reconcile([].concat.apply([], sources));
@@ -31,7 +29,7 @@ function send(subscribers, changes) {
   const changed = ses.formatTemplateData(changes);
 
   for (let i = 0; i < changed.length; i++) {
-    const recipients = mailchimp.filterUsers(subscribers, changes[i].aeid).map(r => r.email_address);
+    const recipients = mailchimp.filterUsers(subscribers, changed[i].aeid).map(r => r.email_address);
     ses.send({ changes: changed[i], recipients }).then(() => {
       dynamodb.updateTopic(changed[i].aeid, new Date());
     });
