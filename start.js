@@ -30,7 +30,8 @@ function send(subscribers, changes) {
 
   for (let i = 0; i < changed.length; i++) {
     const recipients = mailchimp.filterUsers(subscribers, changed[i].aeid).map(r => r.email_address);
-    ses.send({ changes: changed[i], recipients }).then(() => {
+    ses.send({ changes: changed[i], recipients }).then((res) => {
+      console.log('Result of email send:', JSON.stringify(res));
       dynamodb.updateTopic(changed[i].aeid, new Date());
     });
   }
