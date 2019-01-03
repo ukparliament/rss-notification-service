@@ -66,7 +66,7 @@ const mailchimp = {
       }
     }
 
-    return masterList.filter(value => value.merge_fields && Object.keys(value.merge_fields).every(key => {
+    return masterList.filter(value => value.merge_fields && Object.keys(value.merge_fields).some(key => {
       if(key.startsWith('AEID')) {
         return value.merge_fields[key].split(',').includes(topicId.toString());
       }
