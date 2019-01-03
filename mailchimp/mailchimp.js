@@ -66,7 +66,11 @@ const mailchimp = {
       }
     }
 
-    return masterList.filter(value => value.merge_fields && value.merge_fields.AEID).filter(value => value.merge_fields.AEID.split(',').includes(topicId.toString()));
+    return masterList.filter(value => value.merge_fields && Object.keys(value.merge_fields).every(key => {
+      if(key.startsWith('AEID')) {
+        return value.merge_fields[key].split(',').includes(topicId.toString());
+      }
+    }));
   },
   setCachedUsers(users) {
     this.cachedUsers = {
