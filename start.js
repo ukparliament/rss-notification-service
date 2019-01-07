@@ -40,6 +40,7 @@ function send(subscribers, changes) {
 async function start() {
   console.info('Retrieving all topics from DynamoDB...');
   const topics = await dynamodb.getAllTopics();
+  await dynamodb.setTopicsState(topics, 'processing');
   console.info('Requesting feeds... this may take a few minutes');
   const request = await poller.requestFeeds(topics);
   console.info('Checking feeds... this may take a few minutes');
@@ -49,6 +50,7 @@ async function start() {
     const subscribers = await mailchimp.getSubscribers();
     send(subscribers, changes);
   }
+  await dynamodb.setTopicsState(topics, 'dormant');
   await helpers.sleep(600000);
   return start();
 }

@@ -66,7 +66,8 @@ const dynamodb = {
       const obj = {
         PutRequest: {
           Item: {
-            topic_id: { S: crypto.createHash('md5').update(value.rss_link).digest('hex').substring(0, 8) }
+            topic_id: { S: crypto.createHash('md5').update(value.rss_link).digest('hex').substring(0, 8) },
+            topic_state: { S: 'dormant' }
           }
         }
       };
@@ -110,10 +111,13 @@ const dynamodb = {
 
     assigned.ExpressionAttributeValues = {
       ':a': {
-        S: '0'
+        S: '1'
+      },
+      ':b': {
+        S: 'dormant'
       }
     };
-    assigned.FilterExpression = 'enabled <> :a';
+    assigned.FilterExpression = 'enabled = :a AND topic_state = :b';
     assigned.Limit = 100;
 
     if(lastScan !== undefined && lastScan.LastEvaluatedKey === undefined) {
@@ -156,6 +160,31 @@ const dynamodb = {
     assigned.ReturnValues = 'ALL_NEW';
     assigned.UpdateExpression = 'SET #LU = :lu';
     return aws.updateItem(assigned).promise();
+  },
+  setTopicsState(topics, state) {
+    const assigned = Object.assign({}, params);
+    assigned.ExpressionAttributeNames = {
+      '#STATE': 'topic_state'
+    };
+    assigned.ExpressionAttributeValues = {
+      ':state': {
+        S: state
+      }
+    };
+    assigned.ReturnValues = 'ALL_NEW';
+    assigned.UpdateExpression = 'SET #STATE = :state';
+
+    const promises = [];
+    for (let i = 0; i < topics.length; i++) {
+      assigned.Key = {
+        'topic_id': {
+          S: topics[i].topic_id.S
+        }
+      };
+
+      promises.push(aws.updateItem(assigned).promise().catch((error) => console.log('Error updating topic state ', topics[i].topic_id.S, ' to ', state)));
+    }
+    return Promise.all(promises);
   }
 };
 
