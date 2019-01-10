@@ -98,16 +98,15 @@ const emails = {
       throw new Error(`${required.join(', ').trim()} missing from options`);
     }
 
-    const totalCalls = Math.ceil(options.recipients.length / maxChunks);
     const promises = [];
+    const chunk = sendingDefaults;
+    const sendingOptions = emails.formatSendOptions(options.changes);
+    chunk.Message.Body.Html.Data = sendingOptions.html;
+    chunk.Message.Body.Text.Data = sendingOptions.text;
+    chunk.Message.Subject.Data = sendingOptions.subject;
 
-    for (let i = 0; i < totalCalls; i++) {
-      const chunk = sendingDefaults;
-      const sendingOptions = emails.formatSendOptions(options.changes);
-      chunk.Destination.BccAddresses = options.recipients.slice(i * maxChunks, (i * maxChunks) + maxChunks);
-      chunk.Message.Body.Html.Data = sendingOptions.html;
-      chunk.Message.Body.Text.Data = sendingOptions.text;
-      chunk.Message.Subject.Data = sendingOptions.subject;
+    while(options.recipients.length) {
+      chunk.Destination.BccAddresses = options.recipients.splice(0, 1);
       promises.push(ses.sendEmail(chunk).promise().catch((error) => { console.log('SES error', error) }));
     }
 
