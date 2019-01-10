@@ -30,27 +30,30 @@ function send(subscribers, changes) {
 
   for (let i = 0; i < changed.length; i++) {
     const recipients = mailchimp.filterUsers(subscribers, changed[i].aeid).map(r => r.email_address);
-    ses.send({ changes: changed[i], recipients }).then((res) => {
-      console.log('Result of email send:', JSON.stringify(res));
-      dynamodb.updateTopic(changed[i].aeid, new Date());
-    });
+    if(recipients.length) {
+      ses.send({ changes: changed[i], recipients }).then((res) => {
+        console.log('Result of email send:', JSON.stringify(res));
+        dynamodb.updateTopic(changed[i].aeid, new Date());
+      });
+    }
   }
 }
 
 async function start() {
   console.info('Retrieving all topics from DynamoDB...');
   const topics = await dynamodb.getAllTopics();
-  await dynamodb.setTopicsState(topics, 'processing');
   console.info('Requesting feeds... this may take a few minutes');
   const request = await poller.requestFeeds(topics);
   console.info('Checking feeds... this may take a few minutes');
   const changes = await poller.checkFeeds(request);
-  console.info('Any changes?:', changes);
   if(changes.length) {
+    console.log('Changes:');
+    changes.forEach(val => {
+      console.log(`${val.title} (${val.aeid}) has changed, with ${val.items.length} changes.`);
+    });
     const subscribers = await mailchimp.getSubscribers();
     send(subscribers, changes);
   }
-  await dynamodb.setTopicsState(topics, 'dormant');
   await helpers.sleep(600000);
   return start();
 }
