@@ -46,6 +46,6 @@ pipelines:
                       - deploy-ecs
 
 environments:
-  Web.LIVE:
+  WebLIVE:
     pipelines:
       - parliament.uk-rss-notification-service
