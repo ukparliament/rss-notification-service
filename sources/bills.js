@@ -1,20 +1,31 @@
 const path = require('path'),
-      rssParser = require('rss-parser');
-
-const parser = new rssParser({
-  customFields: {
-    item: [ ['a10:updated', 'updated'] ]
-  }
-});
+      rssParser = require('rss-parser'),
+      parser = new rssParser({
+        customFields: {
+          item: [['a10:updated', 'updated']]
+        }
+      });
 
 const bills = {
   /**
-   * Get all Bills from RSS feed
+   * Loop through an array of URLs and get child nodes as feeds
+   * @param  {string} type Type label for feed
+   * @return {array}       Flat array of feeds from getChildren
+   */
+  async getFeedsFromUrls(type) {
+    const urls = require(`./urls/${type}.json`);
+    const awaited = await Promise.all(
+      urls.map(url => bills.getChildren(url, type))
+    );
+    return [].concat.apply([], awaited);
+  },
+  /**
+   * Parse and map child nodes from a feed
    * @param  {string} url  Can be either the AllPublicBills or AllPrivateBills feed URL
-   * @param  {string} type Type of feed to label as
+   * @param  {string} type Type label for feed
    * @return {Promise}
    */
-  async getAll(url, type) {
+  async getChildren(url, type) {
     const parsed = await parser.parseURL(url);
     return parsed.items.map(val => ({
       description: val.content,

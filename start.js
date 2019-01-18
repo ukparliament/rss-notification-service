@@ -1,24 +1,17 @@
-const bills             = require('./sources/bills.js'),
-      committees        = require('./sources/committees.js'),
-      researchBriefings = require('./sources/research-briefings.js'),
-      dynamodb          = require('./dynamodb/dynamodb.js'),
-      healthcheck       = require('./helpers/healthcheck.js'),
-      helpers           = require('./helpers/helpers.js'),
-      mailchimp         = require('./mailchimp/mailchimp.js'),
-      poller            = require('./poller/poller.js'),
-      ses               = require('./ses/ses.js');
+const dynamodb    = require('./dynamodb/dynamodb.js'),
+      healthcheck = require('./helpers/healthcheck.js'),
+      helpers     = require('./helpers/helpers.js'),
+      mailchimp   = require('./mailchimp/mailchimp.js'),
+      poller      = require('./poller/poller.js'),
+      ses         = require('./ses/ses.js'),
+      sources     = require('./sources/sources.js');
 
 async function setup() {
   console.info('Setting up DynamoDB...');
   await dynamodb.setup();
-  console.info('Retrieving all sources (public_bill, private_bill, committees)...');
-  const sources = await Promise.all([
-    bills.getAll('https://services.parliament.uk/Bills/AllPublicBills.rss', 'public_bill'),
-    bills.getAll('https://services.parliament.uk/Bills/AllPrivateBills.rss', 'private_bill'),
-    committees.getBase('https://www.parliament.uk/business/committees/committees-a-z/').then((res) => committees.getRssFeeds(res)).then((res) => committees.getFeedInformation(res))
-  ]);
+  const populate = await sources.getAll();
   console.info('Populating DynamoDB...');
-  const newTopics = await dynamodb.reconcile([].concat.apply([], sources));
+  const newTopics = await dynamodb.reconcile([].concat.apply([], populate));
   if(newTopics) {
     await dynamodb.populate(newTopics);
   }

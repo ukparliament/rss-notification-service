@@ -1,5 +1,10 @@
 const axios = require('axios'),
       rssParser = require('rss-parser'),
+      parser = new rssParser({
+        customFields: {
+          item: [['a10:updated', 'updated']]
+        }
+      }),
       committees = require('../../sources/committees.js'),
       expected = require('../fixtures/json/sources.json'),
       fixtures = require('../utilities/fixtures.js'),
@@ -16,6 +21,28 @@ describe('Sources - Committees', () => {
 
   afterEach(() => {
     sandbox = sandbox.restore();
+  });
+
+  describe('getFeedsFromUrls', () => {
+    it('runs getBase, getRssFeeds, and getFeedInformation', async () => {
+      sandbox.stub(axios, 'get').callsFake(args => {
+        let fixture = fixtures.outputHtml('committees-az.html');
+        if(args.length > 'https://www.parliament.uk/business/committees/committees-a-z/'.length) {
+          fixture = fixtures.outputHtml('committee-with-cpi.html');
+        } else if(!args.includes('parliament.uk')) {
+          fixture = fixtures.outputHtml('committee-without-cpi.html');
+        }
+        return new Promise(resolve => {
+          resolve({ data: fixture });
+        });
+      });
+      sandbox.stub(rssParser.prototype, 'parseURL').callsFake(() => {
+        let fixture = fixtures.outputHtml('single_committee_feed.rss');
+        return parser.parseString(fixture);
+      });
+      const result = await committees.getFeedsFromUrls();
+      return assert.deepEqual(result, expected.committees_getFeedsFromUrls);
+    });
   });
 
   describe('retrieves correct committees from HTML page', () => {
