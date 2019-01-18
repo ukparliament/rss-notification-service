@@ -1,6 +1,7 @@
 const axios = require('axios'),
       cheerio = require('cheerio'),
-      rssParser = require('rss-parser');
+      rssParser = require('rss-parser'),
+      generic   = require('./generic.js');
 
 const parser = new rssParser({
   customFields: {
@@ -16,6 +17,10 @@ const committees = {
   getFeedsFromUrls() {
     return committees.getBase('https://www.parliament.uk/business/committees/committees-a-z/').then((res) => committees.getRssFeeds(res)).then((res) => committees.getFeedInformation(res));
   },
+  /**
+   * Reuse the generic checkForNewItems, as feed syntax doesn't differ
+   */
+  checkForNewItems: generic.checkForNewItems,
   /**
    * Get the base list of committees
    * @param  {string} url URL of the committees A-Z page
@@ -60,9 +65,10 @@ const committees = {
     for(const item in committees) {
       try {
         const rss_feed = await parser.parseURL(committees[item].rss_link);
+        const last_updated = generic.getNewestDate(rss_feed.items);
         committees[item].description = rss_feed.description;
-        committees[item].enabled = 1;
-        committees[item].last_updated = rss_feed.items[0].isoDate;
+        committees[item].enabled = last_updated ? 1 : 0;
+        committees[item].last_updated = last_updated;
       }
       catch(e) {
         console.warn(`Failed to get feed: ${committees[item].title} (${committees[item].rss_link}), (${e}), so it has been disabled, continuing...`);

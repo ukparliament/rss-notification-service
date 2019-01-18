@@ -18,6 +18,29 @@ const generic = {
     );
   },
   /**
+   * Checks for new items in a feed
+   * @param  {object} feed Feed object from DynamoDB
+   * @return {object}      Parsed feed object, with items.length >0 if new items, or 0 if no new items
+   */
+  async checkForNewItems(feed) {
+    try {
+      const parsed = await parser.parseURL(feed.rss_link.S);
+
+      if(Object.keys(feed.last_updated).includes('S')) {
+        parsed.items = parsed.items.filter(item => item.isoDate > feed.last_updated.S);
+      } else {
+        parsed.items = [];
+      }
+
+      parsed.aeid = feed.topic_id.S;
+
+      return parsed;
+    }
+    catch(e) {
+      console.warn(`Failed to get feed: ${feed.rss_link.S} (${feed.topic_id.S})`);
+    }
+  },
+  /**
    * Parse and map feed from URL
    * @param  {string} url  Requestable URL of feed
    * @param  {type}   type Type label for feed
@@ -25,11 +48,13 @@ const generic = {
    */
   async getFeedFromUrl(url, type) {
     const parsed = await parser.parseURL(url);
+    const last_updated = generic.getNewestDate(parsed.items);
+    const enabled = last_updated ? 1 : 0;
     return {
       description: parsed.description,
-      enabled: 0,
+      enabled,
       guid: parsed.link ? parsed.link : url,
-      last_updated: generic.getNewestDate(parsed.items),
+      last_updated,
       rss_link: url,
       title: parsed.title,
       type

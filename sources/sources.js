@@ -5,7 +5,7 @@ const bills      = require('./bills.js'),
 const sources = {
   types: {
     bills: ['private_bill', 'public_bill'],
-    committees: ['committees'],
+    committees: ['committee'],
     generic: ['accountability', 'debates', 'news', 'research', 'generic_bill']
   },
   /**
@@ -16,6 +16,19 @@ const sources = {
     console.info('Retrieving all sources (accountability, bills, committees, debates, news, research)...');
     const feeds = Object.keys(sources.types).map(type => sources.types[type].map(source => sources[type].getFeedsFromUrls(source)));
     return Promise.all([].concat.apply([], feeds));
+  },
+  /**
+   * Requests feeds and returns a Promise with checked feeds
+   * @param  {array}   feeds Array of feeds from DynamoDB
+   * @return {Promise}
+   */
+  async checkFeeds(feeds) {
+    return Promise.all(
+      feeds.map(feed => {
+        const type = Object.keys(sources.types).find(type => sources.types[type].includes(feed.type.S));
+        return sources[type].checkForNewItems(feed);
+      })
+    );
   },
   generic,
   bills,

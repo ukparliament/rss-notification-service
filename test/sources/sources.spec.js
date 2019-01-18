@@ -1,5 +1,6 @@
 const sources = require('../../sources/sources.js'),
       expected = require('../fixtures/json/sources.json'),
+      dynamodb = require('../fixtures/json/dynamodb.json'),
       fixtures = require('../utilities/fixtures.js'),
       rssParser = require('rss-parser'),
       parser = new rssParser({
@@ -37,6 +38,13 @@ describe('Sources - Sources', () => {
       delete sources.types.committees;
       const result = await sources.getAll();
       return assert.deepEqual(result, expected.sources_getAll);
+    });
+  });
+
+  describe('checkFeeds', () => {
+    it('returns a Promise of sources that have been checked', async () => {
+      const result = await sources.checkFeeds(dynamodb.getItemsTen);
+      return assert.deepEqual(result, expected.sources_checkFeeds);
     });
   });
 

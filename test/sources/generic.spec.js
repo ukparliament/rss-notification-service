@@ -16,8 +16,11 @@ describe('Sources - Generic', () => {
 
   beforeEach(() => {
     sandbox = sinon.createSandbox();
-    sandbox.stub(rssParser.prototype, 'parseURL').callsFake(() => {
+    sandbox.stub(rssParser.prototype, 'parseURL').callsFake((args) => {
       let fixture = fixtures.outputHtml('generic.rss');
+      if(args.includes('fail')) {
+        fixture = '';
+      }
       return parser.parseString(fixture);
     });
   });
@@ -33,11 +36,36 @@ describe('Sources - Generic', () => {
     });
   });
 
-  describe('getFeedsFromUrls', () => {
-    it('returns an array of child nodes from master feeds in a flat array', async () => {
-      const result = await generic.getFeedsFromUrls('accountability');
-      return assert.deepEqual(result, expected.generic_getFeedsFromUrls);
+  describe('checkForNewItems', () => {
+    it('returns an object of a feed with >0 length in items (if there are new items)', async () => {
+      expected.single_feed.rss_link = { S: 'crimeoverseasproductionorders' };
+      const result = await generic.checkForNewItems(expected.single_feed);
+      return assert.deepEqual(result, expected.generic_checkForNewItemsWithItems);
     });
+    it('returns an object of a feed with 0 length in items (if there are no new items)', async () => {
+      const feed = Object.assign({}, expected.single_feed);
+      feed.last_updated = { S: new Date().toISOString() };
+      feed.rss_link = { S: 'crimeoverseasproductionorders' };
+      const result = await generic.checkForNewItems(feed);
+      return assert.deepEqual(result, expected.generic_checkForNewItemsWithoutItems);
+    });
+    it('returns an object of a feed with 0 length in items (if there is no last_updated date)', async () => {
+      const feed = Object.assign({}, expected.single_feed);
+      feed.last_updated = {};
+      feed.rss_link = { S: 'crimeoverseasproductionorders' };
+      const result = await generic.checkForNewItems(feed);
+      return assert.deepEqual(result, expected.generic_checkForNewItemsWithoutItems);
+    });
+    it('returns nothing and console.logs an error if parseURL fails', async () => {
+      const feed = Object.assign({}, expected.single_feed);
+      feed.rss_link.S = 'fail';
+      const spy = sandbox.spy(console, 'warn');
+      await generic.checkForNewItems(feed);
+      return sandbox.assert.calledOnce(spy);
+    });
+  });
+
+  describe('getFeedsFromUrls', () => {
     it('returns an array of child nodes from master feeds in a flat array', async () => {
       const result = await generic.getFeedsFromUrls('accountability');
       return assert.deepEqual(result, expected.generic_getFeedsFromUrls);
