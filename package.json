@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/ukparliament/rss-notification-service#readme",
   "dependencies": {
-    "aws-sdk": "^2.385.0",
+    "aws-sdk": "^2.391.0",
     "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.4",
@@ -33,7 +33,7 @@
     "local-dynamo": "^0.5.0",
     "mocha": "^5.2.0",
     "nyc": "^13.1.0",
-    "sinon": "^7.2.2",
+    "sinon": "^7.2.3",
     "timekeeper": "^2.1.2"
   }
 }

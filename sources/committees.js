@@ -10,6 +10,13 @@ const parser = new rssParser({
 
 const committees = {
   /**
+   * Gets all feeds and supplementary required information for committees
+   * @return {Promise}
+   */
+  getFeedsFromUrls() {
+    return committees.getBase('https://www.parliament.uk/business/committees/committees-a-z/').then((res) => committees.getRssFeeds(res)).then((res) => committees.getFeedInformation(res));
+  },
+  /**
    * Get the base list of committees
    * @param  {string} url URL of the committees A-Z page
    * @return {Promise}
