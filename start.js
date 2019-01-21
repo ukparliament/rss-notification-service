@@ -2,7 +2,6 @@ const dynamodb    = require('./dynamodb/dynamodb.js'),
       healthcheck = require('./helpers/healthcheck.js'),
       helpers     = require('./helpers/helpers.js'),
       mailchimp   = require('./mailchimp/mailchimp.js'),
-      poller      = require('./poller/poller.js'),
       ses         = require('./ses/ses.js'),
       sources     = require('./sources/sources.js');
 
@@ -20,7 +19,6 @@ async function setup() {
 
 function send(subscribers, changes) {
   const changed = ses.formatTemplateData(changes);
-
   for (let i = 0; i < changed.length; i++) {
     const recipients = mailchimp.filterUsers(subscribers, changed[i].aeid).map(r => r.email_address);
     if(recipients.length) {
@@ -35,10 +33,9 @@ function send(subscribers, changes) {
 async function start() {
   console.info('Retrieving all topics from DynamoDB...');
   const topics = await dynamodb.getAllTopics();
-  console.info('Requesting feeds... this may take a few minutes');
-  const request = await poller.requestFeeds(topics);
   console.info('Checking feeds... this may take a few minutes');
-  const changes = await poller.checkFeeds(request);
+  const request = await sources.checkFeeds(topics);
+  const changes = request.filter(feed => feed ? feed.items.length : false);
   if(changes.length) {
     console.log('Changes:');
     changes.forEach(val => {
