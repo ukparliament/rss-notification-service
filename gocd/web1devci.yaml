@@ -40,6 +40,6 @@ pipelines:
                       - deploy-ecs
 
 environments:
-  Web.DEVCI:
+  WebDEVCI:
     pipelines:
       - parliament.uk-rss-notification-service
