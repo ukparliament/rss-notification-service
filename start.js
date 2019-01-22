@@ -23,8 +23,8 @@ async function send(subscribers, changes) {
   for (let i = 0; i < changed.length; i++) {
     const recipients = mailchimp.filterUsers(subscribers, changed[i].aeid).map(r => r.email_address);
     if(recipients.length) {
-      ses.send({ changes: changed[i], recipients }).then((res) => {
-        console.log('Result of email send:', JSON.stringify(res));
+      ses.send({ changes: changed[i], recipients }).then(() => {
+        console.log(`Result of email send: ${changed[i].title} updates successfully sent.`);
         dynamodb.updateTopic(changed[i].aeid, new Date());
       });
       await helpers.sleep(Math.ceil((1/sesLimit)*1000));

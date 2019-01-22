@@ -12,19 +12,14 @@ describe('SES', () => {
 
   beforeEach(async () => {
     sandbox = sinon.createSandbox();
-    sandbox.stub(helper, 'sendEmail').returns({
-      promise: async () => { return expected.messageId }
+    sandbox.stub(helper, 'sendMail').returns({
+      resolve: async () => { return expected.messageId },
+      catch: async () => { return expected.messageId }
     });
   })
 
   afterEach(async () => {
     sandbox = sandbox.restore();
-  });
-
-  describe('uses the correct config', () => {
-    it('returns the correct API version', () => {
-      return assert.equal(helper.config.apiVersion, '2010-12-01');
-    });
   });
 
   describe('formats template data correctly', () => {

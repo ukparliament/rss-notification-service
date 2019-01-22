@@ -10,27 +10,12 @@ const fs = require('fs'),
       fromEmail = process.env.AWS_SES_FROM_EMAIL || 'noreply@localhost',
       maxChunks = (50 - 1), // This is 50 - 1, as all of the Destination k:v's are counted. Minus 1 for the 'to' address.
       sendingDefaults = {
-        Source: fromEmail,
-        Destination: {
-          BccAddresses: [],
-          ToAddresses: [fromEmail]
-        },
-        Message: {
-          Body: {
-            Html: {
-              Charset: 'UTF-8',
-              Data: null
-            },
-            Text: {
-             Charset: 'UTF-8',
-             Data: null
-            }
-          },
-          Subject: {
-            Charset: 'UTF-8',
-            Data: null
-          }
-        }
+        from: fromEmail,
+        to: [fromEmail],
+        bcc: [],
+        subject: '',
+        text: '',
+        html: ''
       };
 
 const emails = {
@@ -101,13 +86,15 @@ const emails = {
     const promises = [];
     const chunk = sendingDefaults;
     const sendingOptions = emails.formatSendOptions(options.changes);
-    chunk.Message.Body.Html.Data = sendingOptions.html;
-    chunk.Message.Body.Text.Data = sendingOptions.text;
-    chunk.Message.Subject.Data = sendingOptions.subject;
+    chunk.html = sendingOptions.html;
+    chunk.subject = sendingOptions.subject;
+    chunk.text = sendingOptions.text;
 
     while(options.recipients.length) {
-      chunk.Destination.BccAddresses = options.recipients.splice(0, maxChunks);
-      promises.push(ses.sendEmail(chunk).promise().catch((error) => { console.log('SES error', error) }));
+      chunk.bcc = options.recipients.splice(0, maxChunks);
+      promises.push(ses.sendMail(chunk).catch(error => {
+        console.log(`Error with SES: ${error} for ${chunk.subject}`)
+      }));
     }
 
     return Promise.all(promises);

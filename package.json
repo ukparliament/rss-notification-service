@@ -25,6 +25,7 @@
     "express": "^4.16.4",
     "handlebars": "^4.0.12",
     "mailchimp-api-v3": "^1.12.1",
+    "nodemailer": "^5.1.1",
     "rss-parser": "^3.6.2"
   },
   "devDependencies": {
