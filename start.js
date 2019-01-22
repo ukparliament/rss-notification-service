@@ -17,7 +17,7 @@ async function setup() {
   await helpers.sleep(1000); // Wait a second before continuing (connection cooldown)
 }
 
-function send(subscribers, changes) {
+async function send(subscribers, changes) {
   const changed = ses.formatTemplateData(changes);
   for (let i = 0; i < changed.length; i++) {
     const recipients = mailchimp.filterUsers(subscribers, changed[i].aeid).map(r => r.email_address);
@@ -26,6 +26,7 @@ function send(subscribers, changes) {
         console.log('Result of email send:', JSON.stringify(res));
         dynamodb.updateTopic(changed[i].aeid, new Date());
       });
+      await helpers.sleep(50);
     }
   }
 }
