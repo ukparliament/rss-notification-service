@@ -20,12 +20,13 @@ async function setup() {
 async function send(subscribers, changes) {
   const changed = ses.formatTemplateData(changes);
   for (let i = 0; i < changed.length; i++) {
-    dynamodb.updateTopic(changed[i].aeid, new Date());
     const recipients = mailchimp.filterUsers(subscribers, changed[i].aeid).map(r => r.email_address);
     if(recipients.length) {
       ses.send({ changes: changed[i], recipients }).then((res) => {
         console.log('Result of email send:', JSON.stringify(res));
+        dynamodb.updateTopic(changed[i].aeid, new Date());
       });
+      await helpers.sleep(50);
     }
   }
 }
