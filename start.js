@@ -3,7 +3,8 @@ const dynamodb    = require('./dynamodb/dynamodb.js'),
       helpers     = require('./helpers/helpers.js'),
       mailchimp   = require('./mailchimp/mailchimp.js'),
       ses         = require('./ses/ses.js'),
-      sources     = require('./sources/sources.js');
+      sources     = require('./sources/sources.js'),
+      sesLimit    = 14;
 
 async function setup() {
   console.info('Setting up DynamoDB...');
@@ -26,7 +27,7 @@ async function send(subscribers, changes) {
         console.log('Result of email send:', JSON.stringify(res));
         dynamodb.updateTopic(changed[i].aeid, new Date());
       });
-      await helpers.sleep(50);
+      await helpers.sleep(Math.ceil((1/sesLimit)*1000));
     }
   }
 }
