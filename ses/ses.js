@@ -1,5 +1,6 @@
 const fs = require('fs'),
       handlebars = require('handlebars'),
+      helpers = require('../helpers/helpers.js'),
       ses = require('./helper.js'),
       assetUrl = 'https://email-components.parliament.uk',
       templates = {
@@ -81,7 +82,7 @@ const emails = {
    * @param  {object} options Options for the email - including recipients, HTML, text, subject
    * @return {Promise}
    */
-  send(options) {
+  async send(options) {
     const required = ['recipients', 'changes'];
 
     if(!options) {
@@ -108,6 +109,7 @@ const emails = {
     while(options.recipients.length) {
       chunk.Destination.BccAddresses = options.recipients.splice(0, 1);
       promises.push(ses.sendEmail(chunk).promise().catch((error) => { console.log('SES error', error) }));
+      await helpers.sleep(50);
     }
 
     return Promise.all(promises);
