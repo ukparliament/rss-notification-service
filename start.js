@@ -25,10 +25,10 @@ async function send(subscribers, changes) {
     if(recipients.length) {
       ses.send({ changes: changed[i], recipients }).then(() => {
         console.log(`Result of email send: ${changed[i].title} updates successfully sent.`);
-        dynamodb.updateTopic(changed[i].aeid, new Date());
       });
-      await helpers.sleep(Math.ceil((1/sesLimit)*1000));
     }
+    dynamodb.updateTopic(changed[i].aeid, new Date());
+    await helpers.sleep(Math.ceil((1/sesLimit)*1000));
   }
 }
 
