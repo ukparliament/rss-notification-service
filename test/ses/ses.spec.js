@@ -1,5 +1,6 @@
 const { assert } = require('chai'),
       sinon = require('sinon'),
+      timekeeper = require('timekeeper'),
       aws = require('../../ses/ses.js'),
       expected = require('../fixtures/json/ses.json'),
       poller = require('../fixtures/json/poller.json'),
@@ -9,6 +10,9 @@ const { assert } = require('chai'),
 describe('SES', () => {
 
   let sandbox;
+
+  before(() => { timekeeper.freeze(new Date(2010, 0, 1)) });
+  after(() => { timekeeper.reset() });
 
   beforeEach(async () => {
     sandbox = sinon.createSandbox();

@@ -40,6 +40,7 @@ const emails = {
     return rssFeed.map(feed => ({
       title: feed.title,
       aeid: feed.aeid,
+      last_updated: feed.last_updated || new Date().toISOString(),
       items: feed.items.map(item => ({
         title: item.title,
         link: item.link,

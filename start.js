@@ -27,7 +27,7 @@ async function send(subscribers, changes) {
         console.log(`Result of email send: ${changed[i].title} updates successfully sent.`);
       });
     }
-    dynamodb.updateTopic(changed[i].aeid, new Date());
+    dynamodb.updateTopic(changed[i].aeid, changed[i].last_updated);
     await helpers.sleep(Math.ceil((1/sesLimit)*1000));
   }
 }

@@ -149,7 +149,7 @@ const dynamodb = {
     };
     assigned.ExpressionAttributeValues = {
       ':lu': {
-        S: updatedDate.toISOString()
+        S: new Date(updatedDate).toISOString()
       }
     };
     assigned.Key = {

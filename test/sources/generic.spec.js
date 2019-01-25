@@ -8,6 +8,7 @@ const generic = require('../../sources/generic.js'),
         }
       }),
       sinon = require('sinon'),
+      timekeeper = require('timekeeper'),
       { assert } = require('chai');
 
 describe('Sources - Generic', () => {
@@ -37,6 +38,9 @@ describe('Sources - Generic', () => {
   });
 
   describe('checkForNewItems', () => {
+    before(() => { timekeeper.freeze(new Date(2010, 0, 1)) });
+    after(() => { timekeeper.reset() });
+
     it('returns an object of a feed with >0 length in items (if there are new items)', async () => {
       expected.single_feed.rss_link = { S: 'crimeoverseasproductionorders' };
       const result = await generic.checkForNewItems(expected.single_feed);
@@ -44,7 +48,7 @@ describe('Sources - Generic', () => {
     });
     it('returns an object of a feed with 0 length in items (if there are no new items)', async () => {
       const feed = Object.assign({}, expected.single_feed);
-      feed.last_updated = { S: new Date().toISOString() };
+      feed.last_updated = { S: new Date(2099, 0, 1).toISOString() };
       feed.rss_link = { S: 'crimeoverseasproductionorders' };
       const result = await generic.checkForNewItems(feed);
       return assert.deepEqual(result, expected.generic_checkForNewItemsWithoutItems);
