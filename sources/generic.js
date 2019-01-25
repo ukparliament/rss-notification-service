@@ -32,6 +32,7 @@ const generic = {
         parsed.items = [];
       }
 
+      parsed.last_updated = parsed.items.length ? generic.getNewestDate(parsed.items) : new Date().toISOString();
       parsed.aeid = feed.topic_id.S;
 
       return parsed;
