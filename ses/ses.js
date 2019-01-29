@@ -45,7 +45,8 @@ const emails = {
         title: item.title,
         link: item.link,
         pubDate: this.formatTemplateDate(item.pubDate),
-        content: item.content
+        content: item.content,
+        contentSnippet: item.contentSnippet
       }))
     }));
   },
