@@ -27,7 +27,7 @@ describe('SES', () => {
   });
 
   describe('formats template data correctly', () => {
-    it('returns a formatted object with keys title, aeid, items', () => {
+    it('returns a formatted object with keys title, aeid, items, last_updated', () => {
       return assert.deepEqual(aws.formatTemplateData(poller.newArticles), expected.formattedTemplateData);
     });
   });

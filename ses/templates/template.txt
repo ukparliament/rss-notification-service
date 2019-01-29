@@ -16,7 +16,7 @@ You are subscribed to {{ title }} updates from Parliament.
 ** [Facebook]Facebook (https://facebook.com/ukparliament)
 ** [Instagram]Instagram (https://instagram.com/ukparliament)
 
-Unsubscribe (https://email-subscriptions.parliament.uk/) | Manage your email subscriptions (https://email-subscriptions.parliament.uk/)
+Unsubscribe (https://email-subscriptions.parliament.uk/unsubscribe) | Manage your email subscriptions (https://email-subscriptions.parliament.uk/manage)
 
 View our privacy policy (https://www.parliament.uk/site-information/data-protection/uk-parliament-email-privacy-policy/)
 
