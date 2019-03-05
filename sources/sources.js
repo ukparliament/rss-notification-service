@@ -1,10 +1,12 @@
 const bills      = require('./bills.js'),
+      calendars  = require('./calendars.js'),
       committees = require('./committees.js'),
       generic    = require('./generic.js');
 
 const sources = {
   types: {
     bills: ['private_bill', 'public_bill'],
+    calendars: ['calendars'],
     committees: ['committee'],
     generic: ['accountability', 'debates', 'news', 'research', 'generic_bill']
   },
@@ -32,7 +34,8 @@ const sources = {
   },
   generic,
   bills,
-  committees
+  committees,
+  calendars
 };
 
 module.exports = sources;

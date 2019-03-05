@@ -19,22 +19,22 @@
   },
   "homepage": "https://github.com/ukparliament/rss-notification-service#readme",
   "dependencies": {
-    "aws-sdk": "^2.395.0",
+    "aws-sdk": "^2.414.0",
     "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.4",
-    "handlebars": "^4.0.12",
+    "handlebars": "^4.1.0",
     "mailchimp-api-v3": "^1.12.1",
     "nodemailer": "^5.1.1",
-    "rss-parser": "^3.6.2"
+    "rss-parser": "^3.6.3"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "coveralls": "^3.0.2",
+    "coveralls": "^3.0.3",
     "local-dynamo": "^0.5.0",
-    "mocha": "^5.2.0",
-    "nyc": "^13.1.0",
-    "sinon": "^7.2.3",
+    "mocha": "^6.0.2",
+    "nyc": "^13.3.0",
+    "sinon": "^7.2.7",
     "timekeeper": "^2.1.2"
   }
 }
