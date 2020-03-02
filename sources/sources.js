@@ -6,8 +6,7 @@ const bills      = require('./bills.js'),
 const sources = {
   types: {
     bills: ['private_bill', 'public_bill'],
-    calendars: ['calendars'],
-    committees: ['committee'],
+    calendars: ['calendars'],    
     generic: ['accountability', 'debates', 'news', 'research', 'generic_bill']
   },
   /**
