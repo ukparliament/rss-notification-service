@@ -1,5 +1,4 @@
-const bills      = require('./bills.js'),
-      calendars  = require('./calendars.js'),
+const bills      = require('./bills.js'),      
       committees = require('./committees.js'),
       generic    = require('./generic.js');
 
@@ -32,8 +31,7 @@ const sources = {
   },
   generic,
   bills,
-  committees,
-  calendars
+  committees
 };
 
 module.exports = sources;
