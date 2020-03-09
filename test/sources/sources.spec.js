@@ -33,7 +33,8 @@ describe('Sources - Sources', () => {
     sandbox = sandbox.restore();
   });
 
-  describe('getAll', () => {
+  // Committee screen scraping is broken. Disabled this prototype alert system.
+  describe.skip('getAll', () => {
     it('returns a Promise of retrieved sources', async () => {
       delete sources.types.committees;
       const result = await sources.getAll();
@@ -41,7 +42,8 @@ describe('Sources - Sources', () => {
     });
   });
 
-  describe('checkFeeds', () => {
+  // Committee screen scraping is broken. Disabled this prototype alert system.
+  describe.skip('checkFeeds', () => {
     it('returns a Promise of sources that have been checked', async () => {
       const result = await sources.checkFeeds(dynamodb.getItemsTen);
       return assert.deepEqual(result, expected.sources_checkFeeds);
