@@ -28,7 +28,7 @@ const emails = {
     date = new Date(date.replace('GMT', ''));
     const dayOpts = { weekday: 'long' };
     const dateOpts = { year: 'numeric', month: 'short', day: 'numeric' };
-    const timeOpts = { hour: '1-digit', minute: '2-digit', hour12: true };
+    const timeOpts = { hour: 'numeric', minute: '2-digit', hour12: true };
     return `${date.toLocaleString('en-GB', dayOpts)} ${date.toLocaleString('en-GB', dateOpts)} ${date.toLocaleString('en-GB', timeOpts).replace(' ', '').toLowerCase()}`;
   },
   /**
