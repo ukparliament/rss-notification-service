@@ -1,8 +1,7 @@
 [
-  "https://researchbriefings.parliament.uk/rssfeed/Commons Briefing papers",
-  "https://researchbriefings.parliament.uk/rssfeed/Commons Debate packs",
-  "https://researchbriefings.parliament.uk/rssfeed/Lords In Focus",
-  "https://researchbriefings.parliament.uk/rssfeed/Lords Library notes",
+  "https://commonslibrary.parliament.uk/briefing-type/commons-research-briefing/feed/ Briefing papers",
+  "https://lordslibrary.parliament.uk/briefing-type/lords-research-briefing/feed/ In Focus",
+  "https://lordslibrary.parliament.uk/briefing-type/lords-research-briefing/feed/ Library notes",
   "https://researchbriefings.parliament.uk/rssfeed/POSTnotes",
   "https://researchbriefings.parliament.uk/rssfeed/POSTbriefs"
 ]
