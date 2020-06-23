@@ -20,7 +20,7 @@
   "homepage": "https://github.com/ukparliament/rss-notification-service#readme",
   "dependencies": {
     "aws-sdk": "^2.414.0",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.4",
     "handlebars": "^4.1.0",
