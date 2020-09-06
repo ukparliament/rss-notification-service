@@ -23,7 +23,7 @@
     "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.4",
-    "handlebars": "^4.1.0",
+    "handlebars": "^4.5.3",
     "mailchimp-api-v3": "^1.12.1",
     "nodemailer": "^5.1.1",
     "rss-parser": "^3.6.3"
