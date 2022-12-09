@@ -22,7 +22,7 @@
     "aws-sdk": "^2.414.0",
     "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.2",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "handlebars": "^4.1.0",
     "mailchimp-api-v3": "^1.12.1",
     "nodemailer": "^5.1.1",
